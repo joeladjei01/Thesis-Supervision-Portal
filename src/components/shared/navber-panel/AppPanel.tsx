@@ -212,12 +212,12 @@ const AppPanel = ({
               icon: FaEnvelopeOpenText,
               current: false,
             },
-            // {
-            //   name: "Settings",
-            //   href: "/settings",
-            //   icon: SettingsIcon,
-            //   current: false,
-            // },
+            {
+              name: "Settings",
+              href: "/settings",
+              icon: FaGear,
+              current: false,
+            },
             {
               name: "User Manual",
               href: "/user-manual",
@@ -249,7 +249,7 @@ const AppPanel = ({
               {
                 name: "Requests",
                 href: "/requests",
-                icon: FaMessage,
+                icon: FaEnvelopeOpenText,
                 current: false,
               },
               {
@@ -496,7 +496,7 @@ const DesktopPanel = ({ navigation, logout }: panelProps) => {
                             isActive
                               ? "bg-gradient-to-r from-blue-50/60 to-90% to-blue-50/2 text-white border-l-3 border-blue-50"
                               : "text-indigo-200 hover:bg-blue-400/20 hover:text-white",
-                            "group flex gap-x-3 py-2 pl-6 text-sm/6 font-semibold",
+                            "group flex items-center gap-x-1 py-2 pl-6 text-sm/6 font-semibold",
                           )
                         }
                       >
@@ -509,7 +509,7 @@ const DesktopPanel = ({ navigation, logout }: panelProps) => {
                                 isActive
                                   ? "text-white"
                                   : "text-indigo-200 group-hover:text-white",
-                                "size-5 shrink-0",
+                                "size-4.5 shrink-0",
                               )}
                             />
                             {item.name}
