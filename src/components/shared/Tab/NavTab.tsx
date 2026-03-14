@@ -18,16 +18,17 @@ export const NavTab = ({
   // const [selected , setSelected] = useState(activeTab)
   return (
     <div
-      className={"overflow-auto flex w-full justify-between bg-blue-100 p-[3px] rounded-sm"}
+      className={"overflow-auto flex w-full justify-between bg-muted p-[4px] rounded-lg"}
     >
       {selectors.map((value, index) => (
         <button
           key={index}
-          className={`py-2 px-12 ${
-            activeTab === value.id && "bg-white"
-          } cursor-pointer font-semibold text-blue-900 rounded-sm`}
+          className={`py-2 px-12 transition-all duration-200 ${
+            activeTab === value.id 
+              ? "bg-card text-foreground shadow-sm" 
+              : "text-muted-foreground hover:text-foreground"
+          } cursor-pointer font-semibold rounded-md`}
           onClick={() => onTabChange(value.id)}
-          // onClick={setActiveTab}
         >
           {value.title}
         </button>

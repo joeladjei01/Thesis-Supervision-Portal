@@ -23,7 +23,13 @@ export interface UserStateType {
   userInfo: IuserInfo;
   person?: any;
 }
-
+export interface programme_level {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
 export interface Student {
   id: string;
   name: string;
@@ -34,7 +40,9 @@ export interface Student {
   user: IuserInfo;
   supervisors: Supervisor[];
   level_title: string;
+  programme_level: programme_level;
 }
+
 
 export interface Supervisor {
   id: string;

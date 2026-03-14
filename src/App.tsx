@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router";
 import { Toaster } from "react-hot-toast";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-// import "react-quill/dist/quill.snow.css";
+import "react-quill-new/dist/quill.snow.css";
 import { AlertProvider } from "./components/shared/ui/Alert";
 import { ErrorBoundary } from "./components/shared/errors";
 import { useCallback, useEffect, useState } from "react";
@@ -11,7 +11,16 @@ import userStore from "./store";
 import useActiveSessionStore from "./store/useActiveSessionStore";
 
 function App() {
-  const [client] = useState(() => new QueryClient());
+  const [client] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      }),
+  );
   const { isLogin } = userStore();
   const { sessionExpiry, setSessionExpiry } = useActiveSessionStore();
 

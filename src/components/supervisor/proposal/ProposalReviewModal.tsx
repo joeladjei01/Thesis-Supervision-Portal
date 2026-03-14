@@ -100,24 +100,27 @@ const ProposalReviewForm = forwardRef<
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-2 bg-white">
-      <div className="mb-2 border-b border-gray-200 pb-4">
-        <h1 className="text-xl text-gray-500 mb-2 font-montserrat font-medium">
-          <AiOutlineProfile size={23} className="inline-block mr-1" />
-          Proposal Topic
+    <div className="max-w-4xl mx-auto p-2 bg-white dark:bg-card">
+      <div className="mb-6 border-b border-gray-100 dark:border-border pb-6">
+        <h1 className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-3 font-montserrat uppercase tracking-widest flex items-center gap-2">
+          <AiOutlineProfile size={18} />
+          Proposal Topic Detail
         </h1>
-        <h2 className="text-2xl font-bold text-slate-500 ">{proposal.title}</h2>
+        <h2 className="text-3xl font-black text-gray-900 dark:text-white leading-tight">{proposal.title}</h2>
       </div>
 
-      <div className="border-b border-gray-200 p-4 mb-4">
+      <div className="space-y-8 mb-10">
         {/* Description */}
-        <div className="mb-8">
-          <h3 className="text-lg font- text-gray-700 mb-1 font-montserrat">
-            Description
-          </h3>
-          <div className="min-h-50 bg-gray-100/70 p-4 rounded-md border border-gray-300">
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <div className="h-1 w-8 bg-blue-600 dark:bg-blue-400 rounded-full"></div>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+              Executive Background
+            </h3>
+          </div>
+          <div className="bg-gray-50 dark:bg-secondary/10 p-6 rounded-2xl border border-gray-100 dark:border-border/40 shadow-inner">
             <div
-              className="text-gray-700 leading-relaxed text-justify"
+              className="text-gray-700 dark:text-gray-300 leading-relaxed text-justify prose dark:prose-invert max-w-none text-sm"
               dangerouslySetInnerHTML={{ __html: proposal.description }}
             />
           </div>
@@ -125,19 +128,24 @@ const ProposalReviewForm = forwardRef<
 
         {/* Methodology */}
         {proposal.methodology && (
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold text-gray-700 mb-2 font-montserrat">
-              Aim and Objectives
-            </h3>
-            <div
-              className="text-gray-700 text-sm leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: proposal.methodology }}
-            />
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="h-1 w-8 bg-blue-600 dark:bg-blue-400 rounded-full"></div>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+                Aim and Objectives
+              </h3>
+            </div>
+            <div className="bg-blue-50/30 dark:bg-blue-900/5 p-6 rounded-2xl border border-blue-100 dark:border-blue-900/20">
+              <div
+                className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed prose dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: proposal.methodology }}
+              />
+            </div>
           </div>
         )}
       </div>
 
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} className="pt-8 border-t border-gray-100 dark:border-border">
         <div className="mb-8">
           {/* <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Your Decision
@@ -153,46 +161,29 @@ const ProposalReviewForm = forwardRef<
           />
 
           {formik?.touched.decision && formik?.errors.decision && (
-            <div className={"text-red-600 text-sm mt-1"}>
+            <div className={"text-rose-600 dark:text-rose-400 text-xs font-bold mt-2 flex items-center gap-1"}>
+              <span className="w-1 h-1 bg-current rounded-full" />
               {String(formik?.errors.decision)}
             </div>
           )}
         </div>
 
-        {/* Feedback to Student */}
-        <div className="mb-8">
-          {/* <AppInput
-            label="Your Feedback"
-            as="textarea"
-            formik={formik}
-            placeholder="Provide detailed feedback to the student..."
-            name="feedback"
-           /> */}
-        </div>
-
         {/* Action Buttons */}
-        <div className="flex gap-3 justify-end">
+        <div className="flex gap-4 justify-end pt-4">
           <OutlineButton
-            title="Cancel"
+            title="Discard Review"
             type="button"
             onClick={handleCancel}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors
-                      hover:cursor-pointer
-                      "
+            className="px-8 py-2.5 text-xs font-bold uppercase tracking-widest transition-all"
           />
 
           <SolidButton
-            title={"Confirm"}
+            title={loading ? "Processing..." : "Submit Review"}
             type="submit"
             disabled={loading}
-            className={`px-6 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors
-                        hover:cursor-pointer
-                        disabled:cursor-not-allowed
-                         ${
-                           !loading
-                             ? "ug-blue-background text-white hover:bg-blue-700"
-                             : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                         }`}
+            className={`px-10 py-2.5 text-xs font-bold uppercase tracking-widest shadow-lg transition-all active:scale-95 ${
+              loading ? "opacity-50 cursor-not-allowed" : "shadow-blue-500/20"
+            }`}
           />
         </div>
       </form>

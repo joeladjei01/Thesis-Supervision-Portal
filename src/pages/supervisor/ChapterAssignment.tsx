@@ -11,15 +11,15 @@ import { chapterAssignmentSchema } from "../../utils/validationSchema";
 import { Loader2 } from "lucide-react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import userStore from "../../store";
-import { chapters, handleMultiSelectionOnChange } from "../../utils/helpers";
 import usePageTile from "../../hooks/usePageTitle";
 import RichText from "../../components/shared/input/RichText";
 import { useSupervisorDataStore } from "../../store/useSupervisorDataStore";
 import MultiSelect from "../../components/shared/custom-select/MultiSelect";
 import { useNavigate } from "react-router";
+import { cardDefaultStyle } from "@/utils/utils";
 
 const labelStyle =
-  "text-blue-900 mb-1.5 font-semibold block text-md font-medium leading-6";
+  "text-foreground mb-1.5 font-semibold block text-md font-medium leading-6";
 
 interface Options {
   value: string;
@@ -33,7 +33,6 @@ const ChapterAssignment: React.FC = () => {
   const person = userStore((state) => state.person);
   const navigate = useNavigate();
   const userInfo: any = userStore((state) => state.userInfo);
-  const [checked, setChecked] = useState(false);
   const assignedStudents = useSupervisorDataStore(
     (state) => state.assignedStudents,
   );
@@ -41,8 +40,8 @@ const ChapterAssignment: React.FC = () => {
     (state) => state.programmeLevels,
   );
 
-  const getStudentTopic = (topics) => {
-    const approvedTopic = topics.find((topic) => topic.status === "approved");
+  const getStudentTopic = (topics: any) => {
+    const approvedTopic = topics.find((topic: any) => topic.status === "approved");
     if (!approvedTopic) {
       toast.error("No approved topic found for the student.");
       throw new Error("No approved topic found for the student.");
@@ -51,7 +50,7 @@ const ChapterAssignment: React.FC = () => {
     return approvedTopic.id;
   };
 
-  const handleOnSubmit = async (values) => {
+  const handleOnSubmit = async (values : any) => {
     const selectedStudents = Array.isArray(formik.values.student)
       ? formik.values.student
       : [];
@@ -138,7 +137,7 @@ const ChapterAssignment: React.FC = () => {
     },
   });
 
-  const formik = useFormik({
+  const formik : any = useFormik({
     initialValues: {
       programmeLevel: "",
       student: [],
@@ -164,7 +163,7 @@ const ChapterAssignment: React.FC = () => {
 
   const {
     data: supervisorChaptersByLevel,
-    isFetching: isFetchingSupervisorChapters,
+    isLoading: isFetchingSupervisorChapters,
   } = useQuery({
     queryKey: ["superv-programmeLevel-chapters"],
     queryFn: async () => {
@@ -198,7 +197,7 @@ const ChapterAssignment: React.FC = () => {
   // };
 
   const chaptersOptions = (): Options[] => {
-    return supervisorChaptersByLevel?.map((chapter) => {
+    return supervisorChaptersByLevel?.map((chapter: any) => {
       // const deptChapter = departmentChapterUpdate(chapter.id);
       // if (deptChapter) {
       //   return {
@@ -260,13 +259,13 @@ const ChapterAssignment: React.FC = () => {
           subtitle="Assign Chapters to students and set deadlines"
         />
 
-        <div className="p-4 bg-white border border-gray-300 rounded-lg shadow-lg">
+        <div className={`${cardDefaultStyle} p-4 shadow-lg`}>
           {/* <Header
             title="Assign Chapter"
             subtitle=""
           /> */}
-          <div className="mb-6 font-jost text-gray-500">
-            <h3 className="text-xl font-cal-sans tracking-wide text-sky-900">
+          <div className="mb-6 font-jost text-muted-foreground">
+            <h3 className="text-xl font-cal-sans tracking-wide text-primary dark:text-secondary">
               Assign Chapter to Student
             </h3>
             <p>Create a Chapter submissions with deadlines</p>
@@ -288,19 +287,18 @@ const ChapterAssignment: React.FC = () => {
                     onChange={(option) => {
                       formik.setFieldValue(
                         "programmeLevel",
-                        option ? option?.value : "",
+                        option ? option : "",
                       );
                       formik.setFieldValue("student", "");
                     }}
                     placeholder="slect programme level (eg.MSc)"
-                    isClearable
                   />
                 </div>
 
                 {formik?.touched.programmeLevel &&
                   formik?.errors.programmeLevel && (
                     <div>
-                      <p className={"text-red-600 text-sm mt-1"}>
+                      <p className={"text-destructive text-sm mt-1"}>
                         {formik.errors.programmeLevel}
                       </p>
                     </div>
@@ -313,7 +311,7 @@ const ChapterAssignment: React.FC = () => {
                     label="Students"
                     value={formik.values.student}
                     onChange={(options) =>
-                      handleMultiSelectionOnChange(options, "student", formik)
+                      formik.setFieldValue("student", options)
                     }
                     options={filteredStudentsOptions}
                     disabled={!formik.values.programmeLevel}
@@ -395,7 +393,7 @@ const ChapterAssignment: React.FC = () => {
                     formik.values.programmeLevel &&
                     !isFetchingSupervisorChapters && (
                       <div className="py-1.5 flex flex-row gap-1">
-                        <p className="text-sm text-slate-500 italic">
+                        <p className="text-sm text-muted-foreground italic">
                           No Chapter available for the selected programme level.
                         </p>
                         <button

@@ -43,16 +43,16 @@ const FilterTabs: React.FC<FilterTabProps> = ({
   activeTab,
   onTabChange,
 }) => (
-  <div className={"overflow-auto flex w-full justify-between bg-blue-100 p-[3px] rounded-sm"}>
+  <div className={"overflow-auto flex w-full justify-between bg-blue-50 dark:bg-secondary/5 p-[3px] rounded-lg border border-blue-100 dark:border-border"}>
     {tabs.map((tab) => (
       <button
         key={tab.key}
         onClick={() => onTabChange(tab.key)}
-        className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors ${
+        className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-all duration-200 ${
           activeTab === tab.key
-            ? "bg-white shadow-sm"
-            : " hover:text-blue-700"
-        } cursor-pointer font-semibold text-blue-900 rounded-sm`}
+            ? "bg-white dark:bg-primary text-blue-900 dark:text-white shadow-sm"
+            : "text-blue-900/60 dark:text-gray-400 hover:text-blue-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5"
+        } cursor-pointer font-bold`}
       >
         {tab.label} ({tab.count})
       </button>
@@ -125,27 +125,32 @@ const TopicProposalsPage: React.FC = () => {
 
         {
           topicProposals?.length === 0 && (
-          <div className="text-center mt-10">
-      <svg
-        className="mx-auto h-40 w-40 text-gray-400"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={1}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M3 7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"
-        />
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M8 11h8M8 15h4"
-        />
-      </svg>
-            <p className="text-gray-500 mt-4">No topic proposals submitted yet.</p>
+          <div className="flex flex-col items-center justify-center min-h-[400px] bg-white dark:bg-card rounded-2xl border-2 border-dashed border-gray-200 dark:border-border transition-all duration-300">
+            <div className="bg-gray-50 dark:bg-secondary/10 p-6 rounded-full mb-6 group">
+              <svg
+                className="mx-auto h-20 w-20 text-gray-400 dark:text-gray-500 group-hover:scale-110 transition-transform duration-300"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M8 11h8M8 15h4"
+                />
+              </svg>
+            </div>
+            <p className="text-gray-900 dark:text-white text-xl font-bold mb-2">No proposals found</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs text-center">
+              There are currently no topic proposals submitted for your review.
+            </p>
           </div>
           )
       }

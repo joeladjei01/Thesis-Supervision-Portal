@@ -126,7 +126,7 @@ const StudentSubmissionsDetail: React.FC = () => {
       {/* Back Button */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center text-gray-600 hover:text-gray-800 mb-4 font-medium"
+        className="flex items-center text-muted-foreground hover:text-foreground mb-4 font-medium transition-colors"
       >
         <ArrowLeft className="w-5 h-5 mr-2" />
         Back to All Submissions
@@ -145,23 +145,23 @@ const StudentSubmissionsDetail: React.FC = () => {
       {/* Stats Cards */}
       {submissions && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <p className="text-gray-500 text-sm">Total Submissions</p>
-            <p className="text-2xl font-bold text-gray-700">
+          <div className="bg-card border border-border rounded-lg p-4">
+            <p className="text-muted-foreground text-sm">Total Submissions</p>
+            <p className="text-2xl font-bold text-foreground">
               {assignments
                 ? `${submissions.length} / ${assignments.length}`
                 : "-/-"}
             </p>
           </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4">
-            <p className="text-gray-500 text-sm">Pending Review</p>
-            <p className="text-2xl font-bold text-slate-600">
+          <div className="bg-card border border-border rounded-lg p-4">
+            <p className="text-muted-foreground text-sm">Pending Review</p>
+            <p className="text-2xl font-bold text-foreground">
               {submissions.filter((s: any) => !s.approved).length}
             </p>
           </div>
-          <div className="bg-white border border-sky-200 rounded-lg p-4">
-            <p className="text-gray-500 text-sm">Approved</p>
-            <p className="text-2xl font-bold text-blue-900">
+          <div className="bg-card border border-border rounded-lg p-4">
+            <p className="text-muted-foreground text-sm">Approved</p>
+            <p className="text-2xl font-bold text-primary">
               {submissions.filter((s: any) => s.approved).length}
             </p>
           </div>
@@ -177,9 +177,9 @@ const StudentSubmissionsDetail: React.FC = () => {
               placeholder="Search by topic or chapter..."
               value={searchQuery}
               onChange={handleSearch}
-              className="w-full bg-white pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full bg-card pl-10 pr-4 py-2 border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground placeholder:text-muted-foreground"
             />
-            <Search className="absolute left-3 top-2.5 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 text-muted-foreground" />
           </div>
         </div>
       )}
@@ -229,7 +229,7 @@ const StudentSubmissionsDetail: React.FC = () => {
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
             />
           </svg>
-          <p className="text-gray-500 text-lg">
+          <p className="text-muted-foreground text-lg">
             No submissions found for this student.
           </p>
         </div>

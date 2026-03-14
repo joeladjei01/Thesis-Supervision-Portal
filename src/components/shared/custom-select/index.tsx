@@ -33,13 +33,13 @@ function CustomSelect({
   return (
     <div>
       {/* <p className={"text-sm mb-1"}>{label}</p> */}
-      <label className={"text-blue-900 dark:text-white text-sm font-medium leading-6"}>
+      <label className={"text-foreground text-sm font-medium leading-6"}>
         {label}
       </label>
 
       <Select value={value}   onValueChange={value => onChange(value)} disabled={disabled} >
         <SelectTrigger  className="w-full py-2 px-3" >
-          <SelectValue placeholder={placeholder} className="py-2 px-3 text-xl" />
+          <SelectValue placeholder={placeholder} className="py-2 px-3 text-md" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup> 

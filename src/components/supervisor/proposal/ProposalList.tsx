@@ -10,12 +10,12 @@ import { FileText } from "lucide-react";
 const ProposalList = ({ proposals , onActive , active }) => {
   if (proposals.length === 0) {
     return (
-      <div className="text-center py-12">
-        <FileText size={48} className="mx-auto text-gray-400 mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
+      <div className="flex flex-col items-center justify-center min-h-[300px] bg-white dark:bg-card rounded-2xl border border-gray-100 dark:border-border transition-all">
+        <FileText size={48} className="text-gray-400 dark:text-gray-500 mb-4" />
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
           No proposals found
         </h3>
-        <p className="text-gray-500">
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
           There are no proposals matching the current filter.
         </p>
       </div>
@@ -25,10 +25,10 @@ const ProposalList = ({ proposals , onActive , active }) => {
   return (
     <div className="space-y-6">
       {active === "pendingReview" && <div className="mt-2 mb-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
           Pending Topic Proposals
         </h2>
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-500 dark:text-gray-400 text-sm">
           Student proposals awaiting your review
         </p>
       </div>}

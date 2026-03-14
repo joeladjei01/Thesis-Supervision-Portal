@@ -220,13 +220,13 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
   const getStatusClass = (status: string) => {
     switch (status) {
       case "Approved":
-        return "bg-green-100 text-green-800 px-2 py-1 rounded-full text-center w-24 mx-auto";
+        return "bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400 px-2 py-1 rounded-full text-center w-24 mx-auto";
       case "Rejected":
-        return "bg-red-100 text-red-800 px-2 py-1 rounded-full text-center w-24 mx-auto";
+        return "bg-red-100 text-red-800 dark:bg-red-500/10 dark:text-red-400 px-2 py-1 rounded-full text-center w-24 mx-auto";
       case "Needs Revision":
-        return "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-center w-24 mx-auto";
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-500/10 dark:text-yellow-400 px-2 py-1 rounded-full text-center w-26 mx-auto";
       default:
-        return "bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-center w-24 mx-auto";
+        return "bg-gray-100 text-gray-800 dark:bg-muted dark:text-muted-foreground px-2 py-1 rounded-full text-center w-24 mx-auto";
     }
   };
 
@@ -404,14 +404,14 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
       <div className="w-full">
         <div className="flex justify-between mb-6">
           <div>
-            <p className="text-lg font-medium text-slate-700">
+            <p className="text-lg font-medium text-foreground">
               <MdPerson
                 size={24}
-                className="inline mr-1.5 mb-1 text-ug-blue"
+                className="inline mr-1.5 mb-1 text-primary"
               />
               {data.student.name}
             </p>
-            <p className="text-xs pl-3 text-gray-400">
+            <p className="text-xs pl-3 text-muted-foreground">
               {data.student.email}
               {/* • <span className="text-purple-600">{data.level}</span> */}
             </p>
@@ -433,28 +433,28 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
           </div>
         </div>
 
-        <div className="mb-4 border-b border-gray-300 pb-3">
+        <div className="mb-4 border-b border-border pb-3">
           {/* <h3 className="text-md font-semibold  text-blue-800">Chapter Title</h3> */}
-          <p className="text-xl font-medium text-ug-blue mb-1">
+          <p className="text-xl font-medium text-primary mb-1">
             {data.chapter_assignment.chapter.custom_title} -{" "}
             {data.chapter_assignment.chapter.custom_description}
           </p>
-          <p className="text-sm text-gray-600">
-            <span className="font-semibold">Proposed Topic: </span>
+          <p className="text-sm text-foreground">
+            <span className="font-semibold text-muted-foreground">Proposed Topic: </span>
             {data.chapter_assignment.topic.title}
           </p>
         </div>
         {data.content && (
           <div className="mb-4 px-4">
-            <h3 className="text-sm font-montserrat text-slate-600 mb-2">
+            <h3 className="text-sm font-montserrat text-muted-foreground mb-2">
               <PenLine
                 size={17}
-                className="inline mr-2 mb-1 text-xl text-ug-blue"
+                className="inline mr-2 mb-1 text-xl text-primary"
               />
               Description
             </h3>
             <div
-              className="min-h-30 bg-gray-100/50 p-3 rounded-lg text-sm text-gray-800 border border-gray-300"
+              className="min-h-30 bg-muted/30 p-3 rounded-lg text-sm text-foreground border border-border"
               dangerouslySetInnerHTML={{ __html: data.content }}
             />
           </div>
@@ -462,7 +462,7 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
 
         {data.files && data.files.length > 0 && (
           <div className="mt-6 p-4.5 rounded-lg">
-            <p className="text-sm text-gray-800">Attachment(s)</p>
+            <p className="text-sm text-muted-foreground mb-2">Attachment(s)</p>
             <div className="space-y-2">
               {data.files.map((file: any, index: number) => (
                 <div key={index} className="flex items-center w-fit gap-2">
@@ -471,9 +471,9 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
                     onClick={() => handleAttachmentClick(file?.file)}
                     className="w-full"
                   >
-                    <div className="w-fit flex rounded-lg text-blue-900 font-medium items-center hover:underline cursor-pointer">
+                    <div className="w-fit flex rounded-lg text-primary font-medium items-center hover:underline cursor-pointer">
                       {getFileIcon(getFileNameFromURL(file?.file))}
-                      <p className="text-sm">
+                      <p className="text-sm ml-2">
                         {getFileNameFromURL(file?.file)}
                       </p>
                     </div>
@@ -485,7 +485,7 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
         )}
 
         {previousFeedback?.decision !== "approved" && (
-          <div className="border-t border-gray-300 pt-3 px-4 mb-3">
+          <div className="border-t border-border pt-3 px-4 mb-3">
             <div className="mb-6">
               <CustomSelect
                 label="Your Decision"
@@ -543,14 +543,14 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
 
         {previousFeedback?.stage === "draft" &&
           previousFeedback?.file_attachment && (
-            <div className="border-t border-gray-300 pt-3 px-4 mb-3">
+            <div className="border-t border-border pt-3 px-4 mb-3">
               <div>
-                <p>Saved document</p>
+                <p className="text-foreground font-medium mb-2">Saved document</p>
 
                 <div>
                   {previousFeedback.feedback_text && (
                     <div
-                      className="text-sm min-h-30 bg-gray-100/50 p-3 rounded-lg text-gray-800 border border-gray-300"
+                      className="text-sm min-h-30 bg-muted/30 p-3 rounded-lg text-foreground border border-border"
                       dangerouslySetInnerHTML={{
                         __html: previousFeedback.feedback_text,
                       }}
@@ -565,11 +565,11 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
                     download={true}
                     className="w-fit"
                   >
-                    <div className="w-fit flex bg-gray-100 mt-2 p-1 text-blue-900 font-medium items-center cursor-pointer hover:underline">
+                    <div className="w-fit flex bg-muted mt-2 p-1 text-primary font-medium items-center cursor-pointer hover:underline rounded">
                       {getFileIcon(
                         getFileNameFromURL(previousFeedback.file_attachment),
                       )}
-                      <p className="text-sm">
+                      <p className="text-sm ml-2">
                         {getFileNameFromURL(previousFeedback.file_attachment)}
                       </p>
                     </div>
@@ -577,26 +577,26 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
                 </div>
               </div>
 
-              <p className="text-sm text-gray-600 mt-4 italic">
+              <p className="text-sm text-muted-foreground mt-4 italic">
                 This feedback is currently in draft status and has not been
                 submitted to the student.
               </p>
             </div>
           )}
 
-        {previousFeedback?.stage !== "draft" && (
+        {previousFeedback?.stage !== "draft" && previousFeedback?.feedback_text && (
           <div>
-            <h4 className="text-sm font-montserrat text-slate-600 mb-2">
+            <h4 className="text-sm font-montserrat text-muted-foreground mb-2">
               <MdFeedback
                 size={18}
-                className="inline mr-1 text-xl text-ug-blue"
+                className="inline mr-1 text-xl text-primary"
               />
               Recent Feedback
             </h4>
-            <div className="border-t border-gray-300 pt-4 px-4 mb-4">
+            <div className="border-t border-border pt-4 px-4 mb-4">
               <div className="mb-4">
                 <div
-                  className="text-sm min-h-30 bg-gray-100/50 p-3 rounded-lg text-gray-800 border border-gray-300"
+                  className="text-sm min-h-30 bg-muted/30 p-3 rounded-lg text-foreground border border-border"
                   dangerouslySetInnerHTML={{
                     __html: previousFeedback?.feedback_text,
                   }}
@@ -612,11 +612,11 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
                     download={true}
                     className="w-fit"
                   >
-                    <div className="w-fit flex bg-white mt-2 p-1 text-blue-900 font-medium items-center cursor-pointer hover:underline">
+                    <div className="w-fit flex bg-muted mt-2 p-2 text-primary font-medium items-center cursor-pointer hover:underline rounded">
                       {getFileIcon(
                         getFileNameFromURL(previousFeedback?.file_attachment),
                       )}
-                      <p className="text-sm">
+                      <p className="text-sm ml-2">
                         {getFileNameFromURL(previousFeedback?.file_attachment)}
                       </p>
                     </div>
@@ -698,7 +698,7 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
         </div>
 
         {data.status === "draft" && (
-          <p className="text-xs text-gray-500 italic mt-3 bg-yellow-50 p-2 rounded border-l-3 border-yellow-200">
+          <p className="text-xs text-muted-foreground italic mt-3 bg-yellow-500/10 p-2 rounded border-l-3 border-yellow-500">
             Note: This chapter is still in draft status and has not been
             officially submitted by the student.
           </p>
@@ -736,24 +736,24 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
         )}
 
         {isDocumentViewerOpen && selectedAttachment && (
-          <div className="fixed inset-0 z-50 bg-gray-950/60 bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl h-[90vh] flex flex-col">
+          <div className="fixed inset-0 z-50 bg-background/80 flex items-center justify-center p-4">
+            <div className="bg-card rounded-lg shadow-xl w-full max-w-6xl h-[90vh] flex flex-col border border-border">
               {/* Header */}
-              <div className="flex justify-between items-center p-4 border-b border-gray-200">
+              <div className="flex justify-between items-center p-4 border-b border-border">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">
+                  <h3 className="text-lg font-semibold text-foreground">
                     Document Viewer
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     {selectedAttachment.name}
                   </p>
                 </div>
                 <button
                   onClick={closeDocumentViewer}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-2 hover:bg-muted rounded-full transition-colors"
                   aria-label="Close"
                 >
-                  <X size={24} className="text-gray-600" />
+                  <X size={24} className="text-muted-foreground" />
                 </button>
               </div>
 
@@ -774,7 +774,7 @@ const ChapterReview: React.FC<ChapterReviewProps> = ({
               </div>
 
               {/* Footer */}
-              <div className="flex justify-end gap-3 p-4 border-t border-gray-200">
+              <div className="flex justify-end gap-3 p-4 border-t border-border">
                 <OutlineButton
                   title="Save"
                   onClick={handleSaveAttachment}

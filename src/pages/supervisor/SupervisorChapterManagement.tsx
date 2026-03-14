@@ -25,7 +25,7 @@ const SupervisorChapterManagement = () => {
   const axios = useAxiosPrivate();
   const { programmeLevels: allLevels } = useSupervisorDataStore();
 
-  const { data: SuperChaptersByLevel, isFetching: isFetchingSuperChapters } =
+  const { data: SuperChaptersByLevel, isLoading: isLoadingSuperChapters } =
     useQuery({
       queryKey: ["super-programmeLevel-chapters"],
       queryFn: async () => {
@@ -41,7 +41,7 @@ const SupervisorChapterManagement = () => {
       enabled: !!selectedLevel,
     });
 
-  const { data: chaptersByLevel, isFetching } = useQuery({
+  const { data: chaptersByLevel, isLoading: isSgsLoading } = useQuery({
     queryKey: ["programmeLevel-chapters"],
     queryFn: async () => {
       const { data }: any = await axios.get(
@@ -54,7 +54,7 @@ const SupervisorChapterManagement = () => {
 
   const {
     data: departmentChaptersByLevel,
-    isFetching: isFetchingDepartmentChapters,
+    isLoading: isFetchingDepartmentChapters,
   } = useQuery({
     queryKey: ["depart-programmeLevel-chapters"],
     queryFn: async () => {
@@ -145,30 +145,6 @@ const SupervisorChapterManagement = () => {
     },
   });
 
-  const { isPending: deleting, mutateAsync: deletingChapter } = useMutation({
-    mutationFn: async (chapterId) => {
-      const confirmDelete = await alert.confirm(
-        "Are you sure you want to delete this chapter?",
-      );
-      if (!confirmDelete) {
-        throw new Error("User cancelled deletion");
-      }
-      try {
-        await axios.delete(
-          `/departments/${person?.department.id}/department-chapters/delete/${chapterId}/`,
-        );
-      } catch (error) {
-        toast.error("Error deleting chapter");
-        throw error;
-      }
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["depart-programmeLevel-chapters"],
-      });
-      toast.success("Chapter deleted successfully");
-    },
-  });
 
   const formik = useFormik({
     initialValues: {
@@ -199,21 +175,21 @@ const SupervisorChapterManagement = () => {
   };
 
   const orderChapters = (): any[] => {
-    return departmentChaptersByLevel?.sort((a, b) =>
+    return departmentChaptersByLevel?.sort((a: any, b: any) =>
       a.custom_title.localeCompare(b.custom_title),
     );
   };
 
   const supervisorChapterUpdate = (chapterId: string) => {
     const update = SuperChaptersByLevel?.find(
-      (superChapter) => superChapter.chapter.id === chapterId,
+      (superChapter: any) => superChapter.chapter.id === chapterId,
     );
     console.log("update", update);
     if (update) return update;
     return null;
   };
 
-  const onEditChapter = (chapter, customChapter) => {
+  const onEditChapter = (chapter: any, customChapter: any) => {
     if (customChapter) {
       setEditChapter(customChapter);
       setDepartUpdated(true);
@@ -237,13 +213,13 @@ const SupervisorChapterManagement = () => {
         title="Chapter Management"
         subtitle="Set chapters to be assign to a student"
       />
-      <div className="bg-white p-5 rounded-2xl shadow-md mb-6 border-2 border-gray-200">
-        <div className="bg-white mb-6">
-          <h3 className="text-lg font-cal-sans tracking-wide text-gray-500 mb-4">
+      <div className="bg-card p-5 rounded-2xl shadow-md mb-6 border-2 border-border">
+        <div className="bg-card mb-6">
+          <h3 className="text-lg font-cal-sans tracking-wide text-muted-foreground mb-4">
             Chapters for Programme Level
           </h3>
           <div className="mb-4">
-            <label className="  font-semibold text-blue-900 mb-2 block">
+            <label className="font-semibold text-primary mb-2 block">
               Select Programme Level
             </label>
             <CustomSelect
@@ -252,32 +228,23 @@ const SupervisorChapterManagement = () => {
                 value: level.id,
               }))}
               value={selectedLevel}
-              onChange={(option) => setSelectedLevel(option?.value || "")}
+              onChange={(option) => setSelectedLevel(option || "")}
               placeholder="Select level of Programme"
-              isClearable={true}
             />
           </div>
-          {/* <SolidButton
-            title="Create"
-            onClick={() => {
-              setDisplayModal(true);
-            }}
-            className="py-1.5 mt-2"
-            disabled={!selectedLevel}
-          /> */}
         </div>
 
-        <div>
+        <div className="overflow-hidden rounded-lg border border-border">
           <table className="w-full">
             <thead className="sticky top-0">
-              <tr className="border-b border-gray-200">
-                <th className="text-left text-sm font-medium text-gray-600 bg-blue-50 px-4 py-3">
+              <tr className="border-b border-border">
+                <th className="text-left text-sm font-semibold text-muted-foreground bg-muted px-4 py-3">
                   Department Chapters
                 </th>
-                <th className="text-center text-sm font-medium text-gray-600 bg-blue-50 px-4 py-3">
+                <th className="text-center text-sm font-semibold text-muted-foreground bg-muted px-4 py-3">
                   Your Update
                 </th>
-                <th className="text-center text-sm font-medium text-gray-600 bg-blue-50 px-4 py-3">
+                <th className="text-center text-sm font-semibold text-muted-foreground bg-muted px-4 py-3">
                   Actions
                 </th>
               </tr>
@@ -285,8 +252,8 @@ const SupervisorChapterManagement = () => {
             <tbody>
               {!selectedLevel ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-8 text-gray-500">
-                    {isFetching
+                  <td colSpan={5} className="text-center py-8 text-muted-foreground">
+                    {isSgsLoading
                       ? "Loading..."
                       : "Select a level of programme to view chapters"}
                   </td>
@@ -295,16 +262,18 @@ const SupervisorChapterManagement = () => {
                 <tr>
                   <td
                     colSpan={5}
-                    className="w-full flex justify-center items-center text-center py-8 text-gray-500"
+                    className="w-full text-center py-8 text-muted-foreground"
                   >
-                    <Loader2Icon className="animate-spin mr-2 text-ug-blue" />
-                    Loading chapters...
+                    <div className="flex justify-center items-center">
+                      <Loader2Icon className="animate-spin mr-2 text-primary" />
+                      Loading chapters...
+                    </div>
                   </td>
                 </tr>
               ) : (
                 departmentChaptersByLevel?.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="text-center py-8 text-gray-500">
+                    <td colSpan={5} className="text-center py-8 text-muted-foreground">
                       No chapters found for the selected level of programme
                     </td>
                   </tr>
@@ -320,22 +289,24 @@ const SupervisorChapterManagement = () => {
                     <>
                       <tr
                         key={index}
-                        className="border-b border-gray-100 hover:bg-gray-50"
+                        className="border-b border-border hover:bg-muted/30 transition-colors"
                       >
-                        <td className="text-sm text-gray-800 py-3 px-4 font-medium">
+                        <td className="text-sm text-foreground py-3 px-4 font-medium">
                           {chapter.custom_title} - {chapter.custom_description}
                         </td>
 
-                        <td className="text-sm text-gray-800 py-3 px-4 text-center">
-                          {isFetchingSuperChapters ? (
-                            <Loader2Icon className="animate-spin mr-2 text-ug-blue" />
+                        <td className="text-sm text-foreground py-3 px-4 text-center">
+                          {isLoadingSuperChapters ? (
+                            <div className="flex justify-center">
+                              <Loader2Icon className="animate-spin text-primary" />
+                            </div>
                           ) : customChapter ? (
-                            <span className="text-blue-800 ">
+                            <span className="text-primary dark:text-secondary font-semibold">
                               {customChapter.custom_title} -{" "}
                               {customChapter.custom_description}
                             </span>
                           ) : (
-                            <span className="text-gray-600 font-medium">
+                            <span className="text-muted-foreground italic">
                               Not Updated
                             </span>
                           )}
@@ -383,10 +354,10 @@ const SupervisorChapterManagement = () => {
           buttonDisabled={false}
           w="max-w-lg"
         >
-          <div>
+          <div className="space-y-4">
             {editChapter && (
-              <p>
-                Editing <span className="font-bold">{editChapter?.label}</span>
+              <p className="text-muted-foreground">
+                Editing <span className="font-bold text-foreground">{editChapter?.label}</span>
               </p>
             )}
 

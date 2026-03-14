@@ -22,17 +22,17 @@ const AppInput = ({
   className = "",
 }: inputProp) => {
   const commonStyles = `
-    py-2 px-3 border border-gray-300 rounded-md
+    py-2 px-3 border border-border rounded-md
     transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600
-    disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50
-    dark:bg-secondary/5 dark:text-white dark:border-border dark:focus:border-blue-500/50 dark:focus:ring-blue-500/20
+    focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary
+    disabled:bg-muted disabled:cursor-not-allowed disabled:opacity-50
+    bg-card text-foreground
     ${className}
   `;
 
   return (
     <div className={"flex flex-col mb-2 group"}>
-      <label className={"text-blue-900 group-focus-within:text-blue-700 dark:text-gray-300 dark:group-focus-within:text-blue-400 mb-1.5 text-sm font-medium leading-6 transition-colors"}>
+      <label className={"text-foreground mb-1.5 text-sm font-medium leading-6"}>
         {label}
       </label>
       {as === "text" && (
@@ -63,7 +63,7 @@ const AppInput = ({
         />
       )}
       {formik?.touched[name] && formik?.errors[name] && (
-        <div className={"text-red-500 text-xs mt-1 font-medium animate-fadeIn"}>
+        <div className={"text-destructive text-xs mt-1 font-medium animate-fadeIn"}>
           {String(formik?.errors[name])}
         </div>
       )}

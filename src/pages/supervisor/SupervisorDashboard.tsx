@@ -24,104 +24,65 @@ interface StudentRowProps {
   onDetails: (studentId: string) => void;
 }
 
-interface Recent {
-  id: string;
-  title: string;
-  from: string;
-  status: "Approved" | "Rejected";
-}
-
-interface RecentProps {
-  data: Recent;
-}
-
-// Utility Functions
+// Utility Components
 
 const StudentRow: React.FC<StudentRowProps> = ({ student }) => (
-  <tr className="border-t border-gray-100 text-sm font-nunito-sans hover:bg-gray-50 transition-colors">
-    <td className="py-4 px-0 text-sm border border-gray-100">
-      <span className="font-medium px-2 text-ug-blue">
-        {student.name} - {student.student_id}
+  <tr className="border-t border-gray-100 dark:border-border text-sm font-nunito-sans hover:bg-gray-50 dark:hover:bg-secondary/5 transition-colors">
+    <td className="py-4 px-4 text-sm border-r border-gray-100 dark:border-border">
+      <span className="font-bold text-gray-900 dark:text-white">
+        {student.name}
       </span>
+      <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+        {student.student_id}
+      </div>
     </td>
-    {/* <td className="py-4 px-4 text-sm text-center border border-gray-100">
-      <span className="text-gray-700 ">
-        {student.thesis_topic ? student.thesis_topic : "No Topic Proposed"}
-      </span>
-    </td> */}
-    <td className="py-4 px-4 text-sm border border-gray-100">
+    <td className="py-4 px-4 text-sm text-gray-700 dark:text-gray-300">
       {student.programme}
     </td>
-    {/* <td className="py-4 px-4 text-sm border border-gray-100">
-      {student.programme_category}
-    </td> */}
   </tr>
-);
-
-const Recent: React.FC<RecentProps> = ({ data }) => (
-  <div className="flex items-start justify-between py-3 border-b border-gray-100 last:border-b-0">
-    <div className="flex-1">
-      <h4 className="font-medium text-gray-900 mb-1">{data.title}</h4>
-      <p className="text-sm text-gray-500">{data.from}</p>
-    </div>
-
-    <span
-      className={`${
-        data.status == "Approved" ? "bg-green-300" : "bg-red-300"
-      } text-gray-700 text-xs font-medium px-2 py-1 rounded-full`}
-    >
-      {data.status}
-    </span>
-  </div>
 );
 
 const StudentProgressTable: React.FC<{ students: Student[] }> = ({
   students,
 }) => {
-  const handleDetails = (studentId: string) => {
-    console.log("View details for student:", studentId);
-  };
-
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-900 font-nunito-sans">
-          Students
+    <div className="bg-white dark:bg-card rounded-2xl border border-gray-200 dark:border-border shadow-sm overflow-hidden transition-all duration-300">
+      <div className="p-6 border-b border-gray-100 dark:border-border flex items-center justify-between">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white font-nunito-sans">
+          Assigned Students
         </h2>
+        <span className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs font-bold rounded-full">
+          {students.length} Total
+        </span>
       </div>
 
-      <div className="overflow-x-auto border border-gray-200 rounded-xl">
-        <div className="min-w-3xl  ">
-          <table className=" w-full">
-            <thead>
-              <tr className="text-left text-sm font-medium text-gray-500 bg-blue-50">
-                <th className="p-3">Student</th>
-                {/* <th className="p-3 px-4 text-left">Proposed Topic</th> */}
-                <th className="p-3 px-4 text-left">Programme</th>
-                {/* <th className="p-3 px-4 text-left">Level of Programme</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student) => (
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-secondary/10">
+              <th className="px-6 py-4">Student Info</th>
+              <th className="px-6 py-4">Programme of Study</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-border bg-white dark:bg-card">
+            {students.length > 0 ? (
+              students.map((student) => (
                 <StudentRow
                   key={student.id}
                   student={student}
-                  onDetails={handleDetails}
+                  onDetails={() => {}}
                 />
-              ))}
-            </tbody>
-          </table>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={2} className="py-12 text-center text-gray-500 dark:text-gray-400 italic">
+                  No students assigned yet.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-
-      {/* <div className="mt-6 pt-4 border-t border-gray-100">
-        <button
-          onClick={handleViewAll}
-          className="w-full py-2 text-gray-600 text-sm font-medium hover:text-gray-700 transition-colors"
-        >
-          View All Students
-        </button>
-      </div> */}
     </div>
   );
 };
@@ -149,43 +110,46 @@ const SupervisorDashboard: React.FC = () => {
 
   const stat = [
     {
-      title: "Total # of Assigned Students",
+      title: "Assigned Students",
       value: assignedStudents.length || 0,
       icon: Users,
     },
     {
-      title: "Total # of Topic Proposals",
+      title: "Topic Proposals",
       value: proposals.length || 0,
       icon: FileText,
     },
     {
-      title: "Total # of Upcoming Meetings",
+      title: "Upcoming Meetings",
       value: meetingSchedules.filter((m) => m.status === "pending").length || 0,
       icon: Video,
     },
   ];
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
+    <div className="min-h-screen transition-colors duration-300 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <Header
             Icon={UserCircleIcon}
-            iconSize={40}
+            iconSize={48}
             title={``}
-            coloredTitle={`${greeting()} ${person.name}`}
-            subtitle="Supervisor Dashboard"
+            coloredTitle={`${greeting()}, ${person.name}`}
+            subtitle="Explore your supervisory activities and track student progress at a glance."
           />
-          <SolidButton
-            title={"Topic Proposals"}
-            onClick={() => navigate("/topic-submissions")}
-            className="w-fit py-2"
-          />
+          <div className="flex gap-3">
+             <SolidButton
+              title="Topic Proposals"
+              onClick={() => navigate("/topic-submissions")}
+              className="py-2.5 px-6 shadow-lg shadow-blue-500/10"
+              Icon={<FileText size={18} />}
+            />
+          </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {stat.map((item) => (
             <DashboardCard
               key={item.title}
@@ -197,10 +161,9 @@ const SupervisorDashboard: React.FC = () => {
           ))}
         </div>
 
-        {/* Main Content Grid */}
-        <div className="w-full gap-3">
-          {/* Student Progress Table */}
-          <div className="">
+        {/* Dynamic Content Grid */}
+        <div className="grid grid-cols-1 gap-8">
+          <div className="transition-all duration-300 transform">
             <StudentProgressTable students={students} />
           </div>
         </div>

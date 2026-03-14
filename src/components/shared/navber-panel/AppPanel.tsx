@@ -6,15 +6,7 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import {
-  ChartBarBigIcon,
-  ChartBarIcon,
-  FolderIcon,
   Loader2,
-  LucideUserPlus2,
-  MessageCirclePlus,
-  SettingsIcon,
-  UserPlus2Icon,
-  Users2Icon,
   X,
 } from "lucide-react";
 import logo from "../../../assets/UG_LOGO_FULL.png";
@@ -31,8 +23,29 @@ import { useDepartmentDataStore } from "../../../store/useDepartmentDataStore";
 import { useStudentDataStore } from "../../../store/useStudentDataStore";
 import { useSupervisorDataStore } from "../../../store/useSupervisorDataStore";
 import { handleLogout } from "../../../utils/utils";
-import { FaArrowLeft, FaCalendar, FaClipboardList, FaComments, FaHome, FaInbox } from "react-icons/fa";
-import { MdOutlineDocumentScanner } from "react-icons/md";
+import { 
+  FaArrowLeft, 
+  FaCalendar, 
+  FaClipboardList, 
+  FaComments, 
+  FaHome, 
+  FaInbox, 
+  FaUserPlus, 
+  FaChartPie, 
+  FaUsers, 
+  FaFolderOpen, 
+  FaCommentDots, 
+  FaEnvelopeOpenText, 
+  FaCalendarCheck,
+  FaUserGraduate,
+  FaLightbulb,
+  FaBook,
+  FaFileSignature,
+  FaChartBar,
+} from "react-icons/fa";
+import { FaGear, FaMessage, FaSliders, FaUserCheck } from "react-icons/fa6";
+import { MdOutlineDocumentScanner, MdRateReview } from "react-icons/md";
+import { HiCollection } from "react-icons/hi";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -70,7 +83,7 @@ const AppPanel = ({
         {
           name: "Add User",
           href: "/add-user",
-          icon: Users2Icon,
+          icon: FaUserPlus,
           current: false,
         },
         {
@@ -88,7 +101,7 @@ const AppPanel = ({
         {
           name: "Progress Monitor",
           href: "/progress-monitoring",
-          icon: ChartBarBigIcon,
+          icon: FaChartPie,
           current: false,
         },
         {
@@ -100,7 +113,7 @@ const AppPanel = ({
         {
           name: "Settings",
           href: "/settings",
-          icon: SettingsIcon,
+          icon: FaGear,
           current: false,
         },
         {
@@ -118,32 +131,32 @@ const AppPanel = ({
           {
             name: "My Supervisor(s)",
             href: "/supervisors",
-            icon: Users2Icon,
+            icon: FaUsers,
             current: false,
           },
           {
             name: "My Submissions",
             href: "/submissions",
-            icon: FolderIcon,
+            icon: FaFolderOpen,
             current: false,
           },
           {
             name: "Supervisor Feedback",
             href: "/feedback",
-            icon: FaComments,
+            icon: FaCommentDots,
             current: false,
           },
 
           {
             name: "Requests",
             href: "/requests",
-            icon: FaInbox,
+            icon: FaEnvelopeOpenText,
             current: false,
           },
           {
             name: "Meetings",
             href: "/meetings",
-            icon: FaCalendar,
+            icon: FaCalendarCheck,
             current: false,
           },
           // {
@@ -167,43 +180,43 @@ const AppPanel = ({
             {
               name: "Assigned Students",
               href: "/supervisor-students",
-              icon: UserPlus2Icon,
+              icon: FaUserGraduate,
               current: false,
             },
             {
               name: "Topic Proposals",
               href: "/topic-submissions",
-              icon: Users2Icon,
+              icon: FaLightbulb,
               current: false,
             },
             {
               name: "Chapter Assignments",
               href: "/chapter-submissions",
-              icon: FolderIcon,
+              icon: FaBook,
               current: false,
             },
             {
               name: "Review Submissions",
               href: "/review-submissions",
-              icon: AiFillIeCircle,
+              icon: FaFileSignature,
               current: false,
             },
             {
               name: "Chapter Settings",
               href: "/chapter-management",
-              icon: AiFillIeCircle,
+              icon: HiCollection,
               current: false,
             },
             {
               name: "Meetings",
               href: "/schedule-meetings",
-              icon: FaCalendar,
+              icon: FaCalendarCheck,
               current: false,
             },
             {
               name: "Requests",
               href: "/requests",
-              icon: FaInbox,
+              icon: FaEnvelopeOpenText,
               current: false,
             },
             // {
@@ -231,25 +244,25 @@ const AppPanel = ({
               {
                 name: "Supervisor Allocation",
                 href: "supervisor-assignments",
-                icon: Users2Icon,
+                icon: FaUserCheck,
                 current: false,
               },
               {
-                name: "Progress Monitoring",
+                name: "Progress Monitor",
                 href: "/department-progress-monitor",
-                icon: ChartBarIcon,
+                icon: FaChartBar,
                 current: false,
               },
               {
                 name: "Requests",
                 href: "/requests",
-                icon: MessageCirclePlus,
+                icon: FaMessage,
                 current: false,
               },
               {
                 name: "Settings",
                 href: "/settings",
-                icon: SettingsIcon,
+                icon: FaGear,
                 current: false,
               },
               {

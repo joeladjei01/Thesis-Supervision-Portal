@@ -28,7 +28,7 @@ const DepartmentSettings: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen transition-colors duration-300">
       <Header
         title={`${accountType(userInfo.school)} Settings`}
         subtitle={`Manage settings for ${
@@ -57,8 +57,8 @@ const DepartmentSettings: React.FC = () => {
         />
       </div>
 
-      <div className="mt-8">
-        {/* Display programme levels with the id and the title */}
+      {/* <div className="mt-8">
+        {/* Display programme levels with the id and the title 
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="px-6 py-4  ">
             <div className="flex items-center gap-2">
@@ -83,15 +83,11 @@ const DepartmentSettings: React.FC = () => {
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-100 border-b border-gray-200">
-                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                      ID
-                    </th>
+                    
                     <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                       Title
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">
-                      Action
-                    </th>
+                    
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -100,33 +96,13 @@ const DepartmentSettings: React.FC = () => {
                       key={level.id}
                       className="hover:bg-gray-50 transition-colors duration-150"
                     >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <code className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded">
-                            {level.id}
-                          </code>
-                        </div>
-                      </td>
+                      
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-sm font-medium text-gray-900">
                           {level.title || level.name || "N/A"}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(level.id);
-                            toast.success("ID copied to clipboard!", {
-                              icon: "📋",
-                              duration: 2000,
-                            });
-                          }}
-                          className="inline-flex items-center gap-2 px-3 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-md transition-colors duration-200 font-medium text-sm"
-                        >
-                          <Copy className="h-4 w-4" />
-                          Copy ID
-                        </button>
-                      </td>
+                      
                     </tr>
                   ))}
                 </tbody>
@@ -141,7 +117,7 @@ const DepartmentSettings: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

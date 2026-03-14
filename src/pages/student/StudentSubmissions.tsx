@@ -106,7 +106,7 @@ const MySubmissions: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8 flex-wrap">
@@ -135,27 +135,27 @@ const MySubmissions: React.FC = () => {
 
         {/* Progress Section */}
         {chapters?.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+          <div className="bg-card rounded-lg shadow-sm border border-border mb-8">
             <div className="p-6">
               <div className="flex flex-col sm:flex-row justify-between md:items-center mb-4">
                 <div>
-                  <h2 className="text-lg font-cal-sans tracking-wide text-gray-700">
+                  <h2 className="text-lg font-cal-sans tracking-wide text-foreground">
                     Submission Progress
                   </h2>
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-muted-foreground text-sm">
                     Track your overall project submission progress
                   </p>
                 </div>
-                <span className="text-sm text-gray-600 mt-1 md:mt-0">
+                <span className="text-sm text-muted-foreground mt-1 md:mt-0">
                   {stats.totalCompleted}/{stats.totalSubmissions} submissions
                   completed
                 </span>
               </div>
 
               {/* Progress Bar */}
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+              <div className="w-full bg-muted rounded-full h-2 mb-6">
                 <div
-                  className="bg-sky-700 h-2 rounded-full"
+                  className="bg-primary h-2 rounded-full shadow-[0_0_10px_rgba(var(--primary),0.3)]"
                   style={{
                     width: `${
                       (stats.totalCompleted / stats.totalSubmissions) * 100
@@ -167,16 +167,16 @@ const MySubmissions: React.FC = () => {
               {/* Stats Cards */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 gap-y-7">
                 {StatArray.map((stat) => (
-                  <div className="relative bg-gray-50 p-4 rounded-lg border-t-4 border border-sky-800 text-center">
-                    <div className="absolute size-13 -top-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center bg-white rounded-full border-1 border-sky-800">
-                      <stat.Icon size={25} className="mb-1 text-sky-900" />
+                  <div className="relative bg-muted/20 dark:bg-muted/10 p-4 rounded-lg border-t-4 border border-primary text-center">
+                    <div className="absolute size-13 -top-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center bg-card rounded-full border border-primary">
+                      <stat.Icon size={25} className="mb-1 text-primary" />
                     </div>
 
                     <div className="mt-5.5">
-                      <div className="text-2xl font-bold text-slate-500 font-montserrat">
+                      <div className="text-2xl font-bold text-foreground font-montserrat">
                         {stat.value}
                       </div>
-                      <div className="text-sm text-gray-600">{stat.title}</div>
+                      <div className="text-sm text-muted-foreground">{stat.title}</div>
                     </div>
                   </div>
                 ))}
@@ -186,11 +186,11 @@ const MySubmissions: React.FC = () => {
         )}
 
         {chapters && chapters?.length == 0 && (
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+          <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 mb-6">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg
-                  className="h-5 w-5 text-yellow-400"
+                  className="h-5 w-5 text-yellow-500"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -204,7 +204,7 @@ const MySubmissions: React.FC = () => {
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-yellow-700">
+                <p className="text-sm text-yellow-600 dark:text-yellow-500 font-medium">
                   You have no chapter assignments from supervisor yet.
                 </p>
               </div>
@@ -255,11 +255,11 @@ const MySubmissions: React.FC = () => {
         )}
 
         {topics?.length == 0 && (
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-6">
+          <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 mt-6 text-foreground">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg
-                  className="h-5 w-5 text-yellow-400"
+                  className="h-5 w-5 text-yellow-500"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -274,7 +274,7 @@ const MySubmissions: React.FC = () => {
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-yellow-700">
+                <p className="text-sm text-yellow-600 dark:text-yellow-500 font-medium">
                   You have not submitted any topic proposals yet. Click on
                   "Topic Submission" to get started.
                 </p>

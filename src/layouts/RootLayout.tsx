@@ -11,9 +11,7 @@ import userStore from "../store";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useSupervisorDataStore } from "../store/useSupervisorDataStore";
 import { useStudentDataStore } from "../store/useStudentDataStore";
-import useActiveSessionStore from "../store/useActiveSessionStore";
 import Modal from "./Modal";
-import useAlert from "../hooks/useAlert";
 import InactiveAlert from "../components/shared/InactiveAlert";
 
 const RootLayout = () => {
@@ -50,7 +48,7 @@ const RootLayout = () => {
   //---------------------------------------------------------------------------------
   //------------------------------- Department Data ------------------------------------
   //fetch supervisors
-  const fetchSupervisors = async (): Promise<Supervisor[]> => {
+  const fetchSupervisors = async () => {
     try {
       const response = await axios.get<{ data: Supervisor[] }>(
         `/supervisors/supervisor/search/?search=${person.department.name}`,
@@ -70,7 +68,7 @@ const RootLayout = () => {
   });
 
   //fetch students
-  const fetchStudents = async (): Promise<Student[]> => {
+  const fetchStudents = async () => {
     try {
       const response = await axios.get<{ data: Student[] }>(
         `/students/search/?search=${person.department.name}`,
@@ -89,7 +87,7 @@ const RootLayout = () => {
     enabled: userInfo?.role === DEPARTMENT,
   });
 
-  const { data: dapart } = useQuery({
+  useQuery({
     queryKey: ["department-requests"],
     queryFn: async () => {
       try {
@@ -237,7 +235,7 @@ const RootLayout = () => {
     enabled: userInfo?.role === STUDENT,
   });
 
-  const fetchChapters = async (id) => {
+  const fetchChapters = async (id: string) => {
     try {
       const { data }: any = await axios.get(
         `/students/chapter/topic/${id}/assignments/`,
@@ -332,7 +330,6 @@ const RootLayout = () => {
     },
     enabled: userInfo?.role === DEPARTMENT || userInfo?.role === SUPERVISOR,
   });
-  const alert = useAlert();
 
   return (
     <>

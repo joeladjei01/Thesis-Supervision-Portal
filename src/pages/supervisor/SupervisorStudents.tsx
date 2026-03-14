@@ -1,8 +1,7 @@
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import userStore from "../../store";
-import type { Student } from "../../utils/types";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   User,
   BookOpen,
@@ -10,9 +9,10 @@ import {
   Mail,
   FileText,
   ArrowRight,
+  School,
+  LayoutGrid,
 } from "lucide-react";
 import Loading from "../../components/shared/loader/Loading";
-import SolidButton from "../../components/shared/buttons/SolidButton";
 import toast from "react-hot-toast";
 import Modal from "../../layouts/Modal";
 import Header from "../../components/shared/text/Header";
@@ -22,6 +22,7 @@ const SupervisorStudents = () => {
   const person = userStore((state) => state.person);
   const [displayModal, setDisplayModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
+
   const { data: students, isLoading } = useQuery({
     queryKey: ["supervisor-students"],
     queryFn: async () => {
@@ -29,7 +30,6 @@ const SupervisorStudents = () => {
         const { data }: any = await axios.get(
           `/supervisors/supervisor/students/${person.id}/`,
         );
-        console.log("Total students fetched:", data.data);
         return data.data as any[];
       } catch (error) {
         toast.error("Error fetching students");
@@ -49,118 +49,105 @@ const SupervisorStudents = () => {
 
   if (!students || students.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-        <User size={48} className="text-gray-400 mb-3" />
-        <p className="text-gray-600 text-lg font-semibold">
+      <div className="flex flex-col items-center justify-center min-h-[400px] bg-white dark:bg-card rounded-2xl border-2 border-dashed border-gray-200 dark:border-border transition-colors duration-300">
+        <div className="bg-gray-50 dark:bg-secondary/10 p-4 rounded-full mb-4">
+          <User size={48} className="text-gray-400 dark:text-gray-500" />
+        </div>
+        <p className="text-gray-900 dark:text-white text-xl font-bold mb-2">
           No students assigned
         </p>
-        <p className="text-gray-500 text-sm">
-          You currently have no students assigned to you.
+        <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs text-center">
+          You currently have no students assigned to you for supervision.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header
-        title="Your Student"
-        subtitle={`You are supervising ${students.length} student${students.length !== 1 ? "s" : ""}.`}
-        Icon={GraduationCap}
-      />
-      <div className="max-w-7xl mx-auto">
-        {/* Students Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="min-h-screen transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Header
+          title="Assigned Students"
+          subtitle={`Managing ${students.length} student${students.length !== 1 ? "s" : ""} under your supervision.`}
+          Icon={GraduationCap}
+        />
+
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {students?.map((student) => (
             <div
               key={student.id}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 overflow-hidden"
+              className="group bg-white dark:bg-card rounded-lg shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/10 border border-gray-200 dark:border-border overflow-hidden transition-all duration-300"
             >
-              {/* Card Header */}
-              <div className="py-4 text-slate-700 px-3">
-                <div className="flex items-start justify-between px-3 mb-2">
+              {/* Card Header Area */}
+              <div className="relative p-6 pb-0">
+                <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h2 className="text-lg font-bold">
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {student.student.name}
                     </h2>
-                    <p className="text-gray-500 text-sm">
-                      {student.student.student_id}
+                    <p className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-widest mt-1">
+                      ID: {student.student.student_id}
                     </p>
                   </div>
-                  <div className="bg-blue-950 p-1.5 rounded-lg">
-                    <User size={20} className="text-white" />
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-2.5 rounded-xl border border-blue-100 dark:border-blue-800/30 group-hover:scale-110 transition-transform">
+                    <User size={20} className="text-blue-600 dark:text-blue-400" />
                   </div>
                 </div>
               </div>
 
-              {/* Card Body */}
-              <div className="px-6 pb-4 space-y-4">
-                {/* Student Level */}
-                <div className="flex items-start gap-3">
-                  <GraduationCap
-                    size={18}
-                    className="text-ug-blue mt-0.5 flex-shrink-0"
-                  />
-                  <div className="flex-1">
-                    <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide">
-                      Level
-                    </p>
-                    <p className="text-gray-800 font-medium">
-                      {student.student.level || "N/A"}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Programme */}
-                {student.student.programme && (
-                  <div className="flex items-start gap-3">
-                    <FileText
-                      size={18}
-                      className="text-ug-blue mt-0.5 flex-shrink-0"
-                    />
-                    <div className="flex-1">
-                      <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide">
-                        Programme
-                      </p>
-                      <p className="text-gray-800 font-medium">
-                        {student.student.programme}
+              {/* Card Body - Content */}
+              <div className="p-6 space-y-5">
+                {/* Level & Programme */}
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="flex items-start gap-4 p-3 bg-gray-50/50 dark:bg-secondary/5 rounded-md border border-gray-100 dark:border-border/40">
+                    <div className="bg-white dark:bg-secondary/10 p-1.5 rounded-lg shadow-sm">
+                      <GraduationCap size={16} className="text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-tighter">Level / Programme</p>
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                        {student.student.level} • {student.student.programme}
                       </p>
                     </div>
                   </div>
-                )}
 
-                {/* Email */}
-                <div className="flex items-start gap-3">
-                  <Mail
-                    size={18}
-                    className="text-ug-blue mt-0.5 flex-shrink-0"
-                  />
-                  <div className="flex-1">
-                    <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide">
-                      Email
-                    </p>
-                    <p
-                      className="text-gray-800 font-medium text-sm truncate"
-                      title={student.student.user.email}
-                    >
-                      {student.student.user.email}
-                    </p>
+                  <div className="flex items-start gap-4 p-3 bg-gray-50/50 dark:bg-secondary/5 rounded-xl border border-gray-100 dark:border-border/40">
+                    <div className="bg-white dark:bg-secondary/10 p-1.5 rounded-lg shadow-sm">
+                      <Mail size={16} className="text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-tighter">Contact Email</p>
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate" title={student.student.user.email}>
+                        {student.student.user.email}
+                      </p>
+                    </div>
                   </div>
+                </div>
+
+                {/* Supervisor Role Tag */}
+                <div className="pt-2">
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
+                    student.lead 
+                      ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/30"
+                      : "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-800/30"
+                  }`}>
+                    {student.lead ? "Lead Supervisor" : "Co-Supervisor"}
+                  </span>
                 </div>
               </div>
 
-              {/* Card Footer */}
-              <div className="px-6 py-3 bg-gray-50 border-t border-gray-200 flex gap-2">
+              {/* Card Footer - Action Area */}
+              <div className="px-6 py-4 bg-gray-50/50 dark:bg-secondary/10 border-t border-gray-100 dark:border-border flex gap-3">
                 <button
                   onClick={() => handleViewDetails(student)}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 bg-ug-blue text-white text-sm font-medium rounded hover:bg-blue-900 transition-colors duration-200"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white text-xs font-bold rounded-md shadow-md shadow-blue-500/10 transition-all active:scale-95"
                 >
                   <FileText size={16} />
-                  View Details
+                  View Portfolio
                 </button>
                 <button
                   onClick={() => handleViewDetails(student)}
-                  className="inline-flex items-center justify-center p-2 text-ug-blue border border-ug-blue rounded hover:bg-blue-50 transition-colors duration-200"
+                  className="inline-flex items-center justify-center p-2.5 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50 rounded-md hover:bg-white dark:hover:bg-secondary/20 transition-all active:scale-95 shadow-sm"
                 >
                   <ArrowRight size={18} />
                 </button>
@@ -172,153 +159,97 @@ const SupervisorStudents = () => {
 
       {displayModal && selectedStudent && (
         <Modal
-          headTitle={`${selectedStudent.student.name} - Student Details`}
-          subHeadTitle=""
+          headTitle={`${selectedStudent.student.name}`}
+          subHeadTitle="Detailed Academic Portfolio"
           buttonDisabled={false}
           handleConfirm={() => setDisplayModal(false)}
           handleCancel={() => {
             setDisplayModal(false);
             setSelectedStudent(null);
           }}
-          w="max-w-5xl"
+          w="max-w-4xl"
         >
-          <div className="space-y-6">
-            {/* Personal Information Section */}
-            <div className="bg-gray-50 border border-gray-200 p-5 rounded-lg">
-              <h3 className="text-lg font-bold text-ug-blue mb-4 flex items-center gap-2">
-                <User size={20} />
-                Personal Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    Full Name
-                  </p>
-                  <p className="text-gray-800 font-medium">
-                    {selectedStudent.student.name}
-                  </p>
+          <div className="p-2 space-y-8">
+            {/* Top Grid - Personal & Supervision */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <section className="bg-gray-50/50 dark:bg-secondary/10 p-6 rounded-2xl border border-gray-100 dark:border-border">
+                <h3 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                  <User size={16} />
+                  Individual Profile
+                </h3>
+                <div className="grid gap-5">
+                  {[
+                    { label: "Full Identity", value: selectedStudent.student.name },
+                    { label: "Institutional ID", value: selectedStudent.student.student_id },
+                    { label: "Email Address", value: selectedStudent.student.user.email },
+                    { label: "Gender Designation", value: selectedStudent.student.gender || "Undefined" },
+                  ].map((item, idx) => (
+                    <div key={idx} className="border-b border-gray-100 dark:border-border/40 pb-2 last:border-0 last:pb-0">
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-tighter mb-0.5">{item.label}</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">{item.value}</p>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    Student ID
-                  </p>
-                  <p className="text-gray-800 font-medium">
-                    {selectedStudent.student.student_id}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    Gender
-                  </p>
-                  <p className="text-gray-800 font-medium capitalize">
-                    {selectedStudent.student.gender || "Not specified"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    Email
-                  </p>
-                  <p className="text-gray-800 font-medium break-all">
-                    {selectedStudent.student.user.email}
-                  </p>
-                </div>
-              </div>
-            </div>
+              </section>
 
-            {/* Academic Information Section */}
-            <div className="bg-gray-50 border border-gray-200 p-5 rounded-lg ">
-              <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
-                <GraduationCap size={20} />
-                Academic Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    Level
-                  </p>
-                  <p className="text-gray-800 font-medium">
-                    {selectedStudent.student.level}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    Programme
-                  </p>
-                  <p className="text-gray-800 font-medium">
-                    {selectedStudent.student.programme}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    Programme Level
-                  </p>
-                  <p className="text-gray-800 font-medium">
-                    {selectedStudent.student.programme_level?.name || "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    Department
-                  </p>
-                  <p className="text-gray-800 font-medium">
-                    {selectedStudent.student.department}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Thesis & Research Section */}
-            <div className="bg-gray-50 border border-gray-200 p-5 rounded-lg ">
-              <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
-                <BookOpen size={20} />
-                Supervision Status
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                        selectedStudent.lead
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {selectedStudent.lead
-                        ? "Lead Supervisor"
-                        : "Co-Supervisor"}
-                    </span>
+              <div className="space-y-6">
+                <section className="bg-gray-50/50 dark:bg-secondary/10 p-6 rounded-2xl border border-gray-100 dark:border-border">
+                  <h3 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                    <BookOpen size={16} />
+                    Supervisory Context
+                  </h3>
+                  <div className="flex flex-col gap-4">
+                    <div className="bg-white dark:bg-card p-4 rounded-xl shadow-sm border border-gray-100 dark:border-border flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Current Role</span>
+                      <span className={`px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider ${
+                        selectedStudent.lead 
+                          ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400"
+                          : "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400"
+                      }`}>
+                        {selectedStudent.lead ? "Lead Supervisor" : "Assistant Supervisor"}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                </section>
+
+                <section className="bg-gray-50/50 dark:bg-secondary/10 p-6 rounded-2xl border border-gray-100 dark:border-border">
+                   <h3 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                    <LayoutGrid size={16} />
+                    Program Metadata
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-tighter mb-0.5">Academic Level</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white capitalize">{selectedStudent.student.programme_level?.name || "N/A"}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-tighter mb-0.5">Year Status</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">{selectedStudent.student.level}</p>
+                    </div>
+                  </div>
+                </section>
               </div>
             </div>
 
-            {/* Organization Section */}
-            <div className="bg-gray-50 border border-gray-200 p-5 rounded-lg 0">
-              <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
-                <FileText size={20} />
-                Organization
+            {/* Bottom Section - Institutional Structure */}
+            <section className="bg-white dark:bg-secondary/5 p-6 rounded-2xl border border-gray-200 dark:border-border shadow-inner">
+              <h3 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-6 flex items-center gap-2">
+                <School size={16} />
+                Institutional Affiliation
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    College
-                  </p>
-                  <p className="text-gray-800 font-medium">
-                    {selectedStudent.student.college?.replace(/-/g, " ") ||
-                      "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide mb-1">
-                    School
-                  </p>
-                  <p className="text-gray-800 font-medium">
-                    {selectedStudent.student.school?.replace(/-/g, " ") ||
-                      "N/A"}
-                  </p>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                  { label: "Constituent School", value: selectedStudent.student.school?.replace(/-/g, " ") },
+                  { label: "Academic College", value: selectedStudent.student.college?.replace(/-/g, " ") },
+                  { label: "Assigned Department", value: selectedStudent.student.department },
+                ].map((item, idx) => (
+                  <div key={idx} className="p-4 bg-gray-50 dark:bg-card rounded-xl border border-gray-100 dark:border-border shadow-sm">
+                    <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-tighter mb-1">{item.label}</p>
+                    <p className="text-xs font-bold text-gray-800 dark:text-gray-200 leading-relaxed capitalize">{item.value || "N/A"}</p>
+                  </div>
+                ))}
               </div>
-            </div>
+            </section>
           </div>
         </Modal>
       )}

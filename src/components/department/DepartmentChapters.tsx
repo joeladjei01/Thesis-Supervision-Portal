@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CustomSelect from "../shared/custom-select";
 import SolidButton from "../shared/buttons/SolidButton";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Edit, Loader2, Loader2Icon, Save, Trash2 } from "lucide-react";
+import { BookOpen, Edit, Loader2, Loader2Icon, Save, Trash2 } from "lucide-react";
 import Modal from "../../layouts/Modal";
 import OutlineButton from "../shared/buttons/OutlineButton";
 import { useFormik } from "formik";
@@ -13,7 +13,12 @@ import useAlert from "../../hooks/useAlert";
 import userStore from "../../store";
 import { orderChapters } from "../../utils/helpers";
 
-const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }) => {
+interface DepartmentChaptersProps {
+  allLevels: any[];
+  fetchProgrammeLevels: boolean;
+}
+
+const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }: DepartmentChaptersProps) => {
   const queryClient = useQueryClient();
   const [selectedLevel, setSelectedLevel] = useState<string>("");
   const [displayModal, setDisplayModal] = useState<boolean>(false);
@@ -34,7 +39,7 @@ const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }) => {
   });
 
   const { data: chaptersByLevel, isFetching } = useQuery({
-    queryKey: ["admin-programmeLevel-chapters"],
+    queryKey: ["admin-programmeLevel-chapters", selectedLevel],
     queryFn: async () => {
       try {
         const { data }: any = await axios.get(
@@ -50,10 +55,9 @@ const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }) => {
   });
 
   const {
-    data: departmentChaptersByLevel,
     isFetching: isFetchingDepartmentChapters,
   } = useQuery({
-    queryKey: ["depart-programmeLevel-chapters"],
+    queryKey: ["depart-programmeLevel-chapters", selectedLevel],
     queryFn: async () => {
       try {
         const { data }: any = await axios.get(
@@ -68,16 +72,17 @@ const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }) => {
   });
 
   useEffect(() => {
-    console.log(selectedLevel);
-    queryClient.invalidateQueries({
-      queryKey: ["depart-programmeLevel-chapters"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["depart-programmeLevel-chapters"],
-    });
-  }, [selectedLevel]);
+    if (selectedLevel) {
+      queryClient.invalidateQueries({
+        queryKey: ["depart-programmeLevel-chapters", selectedLevel],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["admin-programmeLevel-chapters", selectedLevel],
+      });
+    }
+  }, [selectedLevel, queryClient]);
 
-  const { isPending: adding, mutateAsync: addingChapter } = useMutation({
+  const { mutateAsync: addingChapter } = useMutation({
     mutationFn: async (values: { chapter: string; label: string }) => {
       try {
         await axios.post(
@@ -98,13 +103,13 @@ const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["depart-programmeLevel-chapters"],
+        queryKey: ["depart-programmeLevel-chapters", selectedLevel],
       });
       queryClient.invalidateQueries({ queryKey: ["all-department-chapters"] });
     },
   });
 
-  const handleUpdateAdminChapter = async (values) => {
+  const handleUpdateAdminChapter = async (values : any) => {
     const confirm = await alert.confirm(
       "Are you sure you want to update this chapter?",
     );
@@ -115,7 +120,7 @@ const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }) => {
     setDisplayModal(false);
   };
 
-  const { isPending: updating, mutateAsync: updatingChapter } = useMutation({
+  const { mutateAsync: updatingChapter } = useMutation({
     mutationFn: async ({
       id,
       values,
@@ -141,15 +146,16 @@ const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["depart-programmeLevel-chapters"],
+        queryKey: ["depart-programmeLevel-chapters", selectedLevel],
       });
+      queryClient.invalidateQueries({ queryKey: ["all-department-chapters"] });
     },
   });
 
-  const { isPending: deleting, mutateAsync: deletingChapter } = useMutation({
+  const { mutateAsync: deletingChapter } = useMutation({
     mutationFn: async (chapterId) => {
       const confirmDelete = await alert.confirm(
-        "Are you sure you want to delete this chapter?",
+        "Are you sure you want to delete this depth chapter modification?",
       );
       if (!confirmDelete) {
         throw new Error("User cancelled deletion");
@@ -165,9 +171,10 @@ const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }) => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["depart-programmeLevel-chapters"],
+        queryKey: ["depart-programmeLevel-chapters", selectedLevel],
       });
-      toast.success("Chapter deleted successfully");
+      await queryClient.invalidateQueries({ queryKey: ["all-department-chapters"] });
+      toast.success("Modification deleted successfully");
     },
   });
 
@@ -199,232 +206,215 @@ const DepartmentChapters = ({ allLevels, fetchProgrammeLevels }) => {
     setEditChapter(null);
   };
 
-  // const orderChapters = (): any[] => {
-  //   return chaptersByLevel?.sort((a, b) => a.name.localeCompare(b.name));
-  // };
-
   const departmentChapterUpdate = (chapterId: string) => {
-    console.log("departmentChaptersByLevel", allChapters);
     const update = allChapters?.find(
-      (deptChapter) => deptChapter.chapter?.id === chapterId,
+      (deptChapter: any) => deptChapter.chapter?.id === chapterId && deptChapter.programme_level === selectedLevel
     );
-    console.log("update", update);
     return update;
   };
 
   return (
-    <div>
-      <div className="bg-white p-5 rounded-2xl shadow-md mb-6 border-2 border-gray-200">
-        <div className="bg-white mb-6">
-          <h3 className="text-lg font-cal-sans tracking-wide text-gray-500 mb-4">
-            Chapters for Level of Programme
-          </h3>
-          <div className="mb-4">
-            <label className="  font-semibold text-blue-900 mb-2 block">
-              Select Level of Programme
-            </label>
-            <CustomSelect
-              options={allLevels?.map((level) => ({
-                label: level.name,
-                value: level.id,
-              }))}
-              value={selectedLevel}
-              onChange={(option) => setSelectedLevel(option?.value || "")}
-              placeholder="Select level of Programme"
-              isClearable={true}
-            />
-          </div>
-          {/* <SolidButton
-            title="Create"
-            onClick={() => {
-              setDisplayModal(true);
-            }}
-            className="py-1.5 mt-2"
-            disabled={!selectedLevel}
-          /> */}
+    <div className="bg-white dark:bg-card p-6 rounded-2xl shadow-lg border border-gray-200 dark:border-border transition-all duration-300">
+      <div className="mb-8">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-6">
+          Programme Chapter Customization
+        </h3>
+        
+        <div className="bg-gray-50 dark:bg-secondary/5 p-6 rounded-2xl border border-gray-100 dark:border-border">
+          <label className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 block">
+            Select Programme Level
+          </label>
+          <CustomSelect
+            options={allLevels?.map((level: any) => ({
+              label: level.name,
+              value: level.id,
+            }))}
+            value={selectedLevel}
+            onChange={(option) => setSelectedLevel(option || "")}
+            placeholder="Choose a programme level to customize its chapters..."
+          />
         </div>
+      </div>
 
-        <div>
+      <div className="rounded-2xl border border-gray-200 dark:border-border overflow-hidden shadow-inner">
+        <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="sticky top-0">
-              <tr className="border-b border-gray-200">
-                <th className="text-left text-sm font-medium text-gray-600 bg-blue-50 px-4 py-3">
-                  Title
+            <thead>
+              <tr className="bg-gray-50 dark:bg-secondary/10 border-b border-gray-200 dark:border-border">
+                <th className="text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 px-6 py-4">
+                  Standard Chapter
                 </th>
-                <th className="text-center text-sm font-medium text-gray-600 bg-blue-50 px-4 py-3">
-                  Department Update
+                <th className="text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 px-6 py-4">
+                  Departmental Override
                 </th>
-                <th className="text-center text-sm font-medium text-gray-600 bg-blue-50 px-4 py-3">
+                <th className="text-center text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 px-6 py-4">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100 dark:divide-border bg-white dark:bg-card">
               {!selectedLevel ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-8 text-gray-500">
-                    {fetchProgrammeLevels
-                      ? "Loading..."
-                      : "Select a level of programme to view chapters"}
+                  <td colSpan={3} className="text-center py-20 bg-gray-50/50 dark:bg-secondary/5">
+                    <BookOpen className="h-10 w-10 text-gray-300 dark:text-gray-700 mx-auto mb-3" />
+                    <p className="text-gray-400 dark:text-gray-500 font-medium italic">
+                      {fetchProgrammeLevels ? "Loading levels..." : "Select a programme level to view and customize chapters"}
+                    </p>
                   </td>
                 </tr>
               ) : isFetching ? (
                 <tr>
-                  <td
-                    colSpan={5}
-                    className="w-full flex justify-center items-center text-center py-8 text-gray-500"
-                  >
-                    <Loader2Icon className="animate-spin mr-2 text-ug-blue" />
-                    Loading chapters...
+                  <td colSpan={3} className="text-center py-20 bg-gray-50/50 dark:bg-secondary/5">
+                    <Loader2Icon className="h-10 w-10 text-blue-500 animate-spin mx-auto mb-3" />
+                    <p className="text-gray-400 dark:text-gray-500 italic">Fetching chapters...</p>
+                  </td>
+                </tr>
+              ) : chaptersByLevel?.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="text-center py-20 bg-gray-50/50 dark:bg-secondary/5">
+                    <p className="text-gray-400 dark:text-gray-500 font-medium italic">No default chapters found for this level.</p>
                   </td>
                 </tr>
               ) : (
-                chaptersByLevel?.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="text-center py-8 text-gray-500">
-                      No chapters found for the selected level of programme
-                    </td>
-                  </tr>
-                )
-              )}
-              {chaptersByLevel?.length > 0 &&
-                selectedLevel &&
-                !isFetching &&
                 orderChapters(chaptersByLevel)?.map((chapter, index) => {
                   const customChapter = departmentChapterUpdate(chapter.id);
-
                   return (
-                    <>
-                      <tr
-                        key={index}
-                        className="border-b border-gray-100 hover:bg-gray-50"
-                      >
-                        <td className="text-sm text-gray-800 py-3 px-4 font-medium">
-                          Chapter {chapter.name} - {chapter.description}
-                        </td>
+                    <tr key={index} className="hover:bg-gray-50 dark:hover:bg-secondary/5 transition-colors group">
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-tighter mb-1">
+                            Chapter {chapter.name}
+                          </span>
+                          <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                            {chapter.description}
+                          </span>
+                        </div>
+                      </td>
 
-                        <td className="text-sm text-gray-800 py-3 px-4 text-center">
-                          {isFetchingDepartmentChapters ? (
-                            <Loader2Icon className="animate-spin mr-2 text-ug-blue" />
-                          ) : customChapter ? (
-                            <span className="text-blue-800 ">
-                              Chapter {customChapter.custom_title} -{" "}
+                      <td className="px-6 py-4">
+                        {isFetchingDepartmentChapters ? (
+                          <Loader2Icon className="h-4 w-4 animate-spin text-blue-500" />
+                        ) : customChapter ? (
+                          <div className="flex flex-col border-l-2 border-emerald-500/30 pl-3">
+                            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1">
+                              Override Active
+                            </span>
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">
                               {customChapter.custom_description}
                             </span>
-                          ) : (
-                            <span className="text-gray-600 font-medium">
-                              Not Updated
-                            </span>
-                          )}
-                        </td>
-
-                        <td className="text-sm py-3 px-4">
-                          <div className="flex gap-2 justify-center">
-                            <SolidButton
-                              title="Edit"
-                              className="py-1 px-2 text-xs"
-                              onClick={() => {
-                                if (customChapter) {
-                                  setEditChapter(customChapter);
-                                  setDepartUpdated(true);
-                                  formik.setValues({
-                                    chapter: customChapter.custom_title,
-                                    label: customChapter.custom_description,
-                                  });
-                                } else {
-                                  setEditChapter(chapter);
-                                  formik.setValues({
-                                    chapter: chapter.name,
-                                    label: chapter.description,
-                                  });
-                                }
-                                setDisplayModal(true);
-                              }}
-                              Icon={<Edit size={15} />}
-                            />
-
-                            {customChapter && (
-                              <button
-                                className="py-1 px-2 text-gray-50 text-lg bg-red-500 cursor-pointer rounded-md hover:bg-red-500/60 transition-colors"
-                                onClick={() => {
-                                  deletingChapter(customChapter.id);
-                                }}
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </button>
-                            )}
                           </div>
-                        </td>
-                      </tr>
-                    </>
+                        ) : (
+                          <span className="text-xs text-gray-400 italic">Using system default</span>
+                        )}
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <div className="flex justify-center items-center gap-2">
+                          <SolidButton
+                            title="Edit"
+                            className="py-1.5 px-4 text-xs font-bold shadow-sm"
+                            onClick={() => {
+                              if (customChapter) {
+                                setEditChapter(customChapter);
+                                setDepartUpdated(true);
+                                formik.setValues({
+                                  chapter: customChapter.custom_title,
+                                  label: customChapter.custom_description,
+                                });
+                              } else {
+                                setEditChapter(chapter);
+                                formik.setValues({
+                                  chapter: chapter.name,
+                                  label: chapter.description,
+                                });
+                              }
+                              setDisplayModal(true);
+                            }}
+                            Icon={<Edit size={14} />}
+                          />
+
+                          {customChapter && (
+                            <button
+                              title="Delete Override"
+                              className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-all border border-transparent hover:border-red-200"
+                              onClick={() => deletingChapter(customChapter.id)}
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
                   );
-                })}
+                })
+              )}
             </tbody>
           </table>
         </div>
       </div>
+
       {displayModal && (
         <Modal
-          headTitle={editChapter ? "Edit Chapter" : "Create Chapter"}
-          subHeadTitle={`${
-            editChapter ? `Modify the ${editChapter.value}` : "Create chapter"
-          } for the selected level of programme`}
+          headTitle={departUpdated ? "Update Override" : "Create Override"}
+          subHeadTitle={editChapter ? `Customizing Chapter ${editChapter.custom_title || editChapter.name}` : ""}
           handleConfirm={() => {}}
           handleCancel={() => onCloseModal()}
           buttonDisabled={false}
           w="max-w-lg"
         >
-          <div>
-            {editChapter && (
-              <p>
-                Editing <span className="font-bold">{editChapter?.label}</span>
-              </p>
-            )}
-
-            <div>
-              <div className="mt-4">
-                <AppInput
-                  name="chapter"
-                  placeholder="eg. 1"
-                  label="Chapter Number"
-                  formik={formik}
-                  disabled={true}
-                />
+          {editChapter && (
+            <div className="p-6 space-y-6">
+              <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-xl border border-blue-100 dark:border-blue-900/20">
+                <p className="text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-widest mb-1">System Default</p>
+                <p className="text-sm font-medium text-blue-900 dark:text-blue-200 italic">
+                  {departUpdated ? editChapter.chapter?.description : editChapter.description}
+                </p>
               </div>
 
-              <div className="mt-4">
-                <AppInput
-                  name="label"
-                  placeholder="eg. Introduction"
-                  label="Label"
-                  formik={formik}
-                />
+            <div className="space-y-4">
+              <div className="grid grid-cols-4 gap-4">
+                <div className="col-span-1">
+                  <AppInput
+                    name="chapter"
+                    placeholder="1"
+                    label="Number"
+                    formik={formik}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-span-3">
+                  <AppInput
+                    name="label"
+                    placeholder="Custom Title..."
+                    label="Custom Description"
+                    formik={formik}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className=" mt-3 flex justify-end">
-            <SolidButton
-              title={editChapter ? "Save Changes" : "Create"}
-              onClick={() => {
-                formik.handleSubmit();
-              }}
-              className="py-1.5 mt-4"
-              Icon={
-                formik.isSubmitting ? (
-                  <Loader2 className="animate-spin" />
-                ) : (
-                  <Save size={18} />
-                )
-              }
-              disabled={formik.isSubmitting}
-            />
-            <OutlineButton
-              title="Cancel"
-              onClick={() => onCloseModal()}
-              className="py-1.5 mt-4 ml-2"
-            />
+            <div className="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-border">
+              <OutlineButton
+                title="Discard"
+                onClick={onCloseModal}
+                className="py-2.5 px-6"
+              />
+              <SolidButton
+                title={formik.isSubmitting ? "Saving..." : "Apply Override"}
+                onClick={() => formik.handleSubmit()}
+                className="py-2.5 px-8 text-sm font-bold shadow-lg"
+                Icon={
+                  formik.isSubmitting ? (
+                    <Loader2 className="animate-spin w-4 h-4" />
+                  ) : (
+                    <Save size={16} />
+                  )
+                }
+                disabled={formik.isSubmitting}
+              />
+            </div>
           </div>
+          )}
         </Modal>
       )}
     </div>

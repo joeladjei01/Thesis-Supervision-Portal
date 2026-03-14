@@ -56,17 +56,17 @@ const ChapterReviewPage: React.FC = () => {
 
   if (chapterLoading || feedbacksLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-ug-blue"></div>
+      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (!chapterData) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-4xl mx-auto bg-white border border-gray-200 rounded-lg p-6">
-          <p className="text-gray-600 text-sm">Chapter not found.</p>
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-4xl mx-auto bg-card border border-border rounded-lg p-6">
+          <p className="text-muted-foreground text-sm">Chapter not found.</p>
           <OutlineButton
             title="Go Back"
             onClick={handleClose}
@@ -83,7 +83,7 @@ const ChapterReviewPage: React.FC = () => {
     : null;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background dark:bg-transparent p-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-4">
           <OutlineButton
@@ -94,7 +94,7 @@ const ChapterReviewPage: React.FC = () => {
           />
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6">
+        <div className="bg-card border border-border rounded-lg shadow-md p-6">
           <ChapterReview
             data={chapterData}
             onClose={handleClose}

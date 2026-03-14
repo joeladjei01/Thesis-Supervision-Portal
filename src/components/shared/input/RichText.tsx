@@ -1,4 +1,3 @@
-import React from "react";
 import ReactQuill from "react-quill-new";
 
 type RichTextProps = {
@@ -43,13 +42,13 @@ const RichText = ({
   ];
 
   return (
-    <div>
-      <label className="text-blue-900 mb-1.5 text-sm font-medium leading-6">
+    <div className="flex flex-col">
+      <label className="text-foreground mb-1.5 text-sm font-medium leading-6">
         {props.label}
       </label>
       <div
-        className={`${h} border border-gray-400 rounded-md ${
-          readOnly ? "bg-gray-100" : "bg-white"
+        className={`${h} border border-border rounded-md overflow-hidden flex flex-col ${
+          readOnly ? "bg-muted" : "bg-card"
         } `}
       >
         <ReactQuill
@@ -59,7 +58,7 @@ const RichText = ({
           onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
-          className={`h-[calc(100%-151px)] sm:h-[calc(100%-108px)] md:h-[calc(100%-68px)] border-0  m-0 p-0`}
+          className="flex-1 flex flex-col"
           onBlur={onBlur}
           {...props}
         />

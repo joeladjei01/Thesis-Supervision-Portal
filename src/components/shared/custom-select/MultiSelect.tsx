@@ -1,5 +1,3 @@
-import Select, { type MultiValue } from "react-select";
-
 import {
   MultiSelect as MultiSelectUI,
   MultiSelectContent,
@@ -18,39 +16,26 @@ interface MultiSelectProps {
   onChange: (options: string[]) => void;
   value: string[];
   options: Option[];
-  placeholder?: string;
   label?: string;
-  disabled?: boolean;
-  isClearable?: boolean;
 }
 
 function MultiSelect({ 
   onChange, 
   value, 
-  isClearable = true, 
-  disabled, 
   label, 
   options, 
-  placeholder = "Select options..." 
 }: MultiSelectProps) {
-  const defaultValue = (
-    options: Option[] | undefined,
-    values: string[] | undefined
-  ) => {
-    if (!options || !values) return [];
-    return options.filter((option) => values.includes(option.value));
-  };
 
   return (
     <div>
       {label && (
-        <label className={"text-blue-900 mb-1.5 text-sm font-medium leading-6"}>
+        <label className={"text-foreground mb-1.5 text-sm font-medium leading-6"}>
           {label}
         </label>
       )}
       <div className="mt-2">
                   <MultiSelectUI values={value} onValuesChange={(selectedOptions) => onChange(selectedOptions)}>
-      <MultiSelectTrigger className="w-full max-w-[400px]">
+      <MultiSelectTrigger className="w-full">
         <MultiSelectValue placeholder="Select frameworks..." />
       </MultiSelectTrigger>
       <MultiSelectContent>

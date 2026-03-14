@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import SolidButton from "../shared/buttons/SolidButton";
-import { Copy, Edit, Loader2, RefreshCcw, Save } from "lucide-react";
+import { Copy, Edit, Loader2, RefreshCcw, Save, Settings2 } from "lucide-react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import toast from "react-hot-toast";
 import userStore from "../../store";
 import OutlineButton from "../shared/buttons/OutlineButton";
 import Modal from "../../layouts/Modal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import RichText from "../shared/input/RichText";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -15,7 +14,7 @@ const validationSchema = Yup.object().shape({
   changedQuota: Yup.number()
     .required("Quota is required")
     .min(0, "Quota must be at least 0"),
-  reason: Yup.string().max(20, "Reason cannot exceed 20 characters"),
+  reason: Yup.string().max(200, "Reason cannot exceed 200 characters"),
 });
 
 interface QuotaItem {
@@ -50,7 +49,7 @@ const SetQuota = () => {
     }
   };
 
-  const handleUpdateQuota = async (values) => {
+  const handleUpdateQuota = async (values: any) => {
     if (!editQuota) return;
     try {
       await axios.put(`/departments/quotas/${editQuota.id}/update/`, {
@@ -58,7 +57,6 @@ const SetQuota = () => {
         reason: values.reason,
       });
       toast.success("Quota updated successfully.");
-      fetchQuota();
       setDisplayModal(false);
       setEditQuota(null);
       formik.resetForm();
@@ -80,6 +78,7 @@ const SetQuota = () => {
   const handleCancelEdit = () => {
     setEditQuota(null);
     setDisplayModal(false);
+    formik.resetForm();
   };
 
   const { mutate: onUpdate, isPending: isUpdating } = useMutation({
@@ -102,6 +101,7 @@ const SetQuota = () => {
         editQuota?.updated_quota || editQuota?.default_quota.quota || "",
       reason: "",
     },
+    enableReinitialize: true,
     validationSchema,
     onSubmit: (values) => {
       onUpdate(values);
@@ -109,139 +109,145 @@ const SetQuota = () => {
   });
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
-      <h3 className="text-md font-bold text-gray-500 mb-4">Supervisor Quota</h3>
+    <div className="bg-white dark:bg-card rounded-xl shadow-lg border border-gray-200 dark:border-border p-6 mb-8 transition-all duration-300">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+          Supervisor Quota
+        </h3>
+        <OutlineButton
+          title="Refresh"
+          onClick={() => {
+            queryClient.invalidateQueries({
+              queryKey: ["fetch-quotas"],
+            });
+          }}
+          className="py-1.5 px-4 text-xs"
+          Icon={
+            <RefreshCcw className={`w-3.5 h-3.5 ${isFetching ? "animate-spin" : ""}`} />
+          }
+        />
+      </div>
 
-      <div>
-        <div className="flex gap-4 items-center mb-4">
-          <OutlineButton
-            title="Refresh"
-            onClick={() => {
-              queryClient.invalidateQueries({
-                queryKey: ["fetch-quotas"],
-              });
-            }}
-            Icon={
-              <RefreshCcw className={`${isFetching ? "animate-spin" : ""}`} />
-            }
-          />
-        </div>
-
-        {allQuotas?.length > 0 ? (
-          <div>
-            {/* Table for quotas */}
-            <div className="rounded-xl border-2 border-gray-200 overflow-x-auto">
-              <table className="min-w-full bg-white ">
-                <thead className="bg-blue-50 text-gray-600 ">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                      ID
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                      Quota Type
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                      Default Quota
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                      Updated Quota
-                    </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {allQuotas.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {item.default_quota.id}
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(
-                              item.default_quota.id,
-                            );
-                            toast.success("ID copied to clipboard");
-                          }}
-                        >
-                          <Copy className="h-4 w-4 text-gray-500 ml-5" />
-                        </button>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {item.default_quota.name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {item.default_quota.quota}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+      <div className="rounded-2xl border border-gray-200 dark:border-border overflow-hidden shadow-inner">
+        {isFetching ? (
+          <div className="flex flex-col items-center justify-center py-20 bg-gray-50/50 dark:bg-secondary/5">
+            <Loader2 className="h-10 w-10 text-blue-500 animate-spin mb-4" />
+            <p className="text-sm text-gray-400 dark:text-gray-500 italic">Fetching quotas...</p>
+          </div>
+        ) : allQuotas?.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gray-50 dark:bg-secondary/10 border-b border-gray-200 dark:border-border">
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    Quota Type
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    Default
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    Current
+                  </th>
+                  <th className="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-border bg-white dark:bg-card">
+                {allQuotas.map((item: any) => (
+                  <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-secondary/5 transition-colors group">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-white">
+                      {item.default_quota.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                      {item.default_quota.quota}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`text-sm font-bold ${item.updated_quota ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400"}`}>
                         {item.updated_quota || item.default_quota.quota}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex justify-center">
                         <SolidButton
                           title="Update"
-                          onClick={() => {
-                            onEditClick(item);
-                          }}
-                          Icon={<Edit size={16} />}
-                          className="py-1 px-3 text-xs"
+                          onClick={() => onEditClick(item)}
+                          Icon={<Edit size={14} />}
+                          className="py-1.5 px-6 text-xs font-bold shadow-sm"
                         />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : (
-          <p>No quota set yet.</p>
+          <div className="text-center py-20 bg-gray-50/50 dark:bg-secondary/5">
+            <Settings2 className="h-12 w-12 text-gray-300 dark:text-gray-700 mx-auto mb-3" />
+            <p className="text-gray-400 dark:text-gray-500 font-medium italic">No quotas configured yet.</p>
+          </div>
         )}
       </div>
 
       {displayModal && (
         <Modal
-          headTitle="Edit Quota"
-          subHeadTitle={
-            editQuota ? `Editing quota for ${editQuota.default_quota.name}` : ""
-          }
-          handleCancel={() => handleCancelEdit()}
+          headTitle="Edit Supervisor Quota"
+          subHeadTitle={editQuota ? `Configuring ${editQuota.default_quota.name}` : ""}
+          handleCancel={handleCancelEdit}
           buttonDisabled
           handleConfirm={() => {}}
-          w="max-w-4xl"
+          w="max-w-2xl"
         >
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Set Quota for {editQuota?.default_quota.name}
-            </label>
-            {/* Input field for setting quota */}
-            <input
-              type="number"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              placeholder="Enter new quota"
-              value={formik.values.changedQuota}
-              onChange={(e) =>
-                formik.setFieldValue("changedQuota", Number(e.target.value))
-              }
-            />
-          </div>
+          <div className="p-6 space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-1">
+                  New Quota Limit
+                </label>
+                <input
+                  type="number"
+                  className="w-full px-4 py-3 bg-white dark:bg-secondary/5 border border-gray-300 dark:border-border rounded-xl text-lg font-bold dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  placeholder="e.g., 5"
+                  value={formik.values.changedQuota}
+                  onChange={(e) =>
+                    formik.setFieldValue("changedQuota", Number(e.target.value))
+                  }
+                />
+                {formik.touched.changedQuota && formik.errors.changedQuota && (
+                  <p className="text-red-500 text-[10px] mt-1 ml-1">{formik.errors.changedQuota as string}</p>
+                )}
+              </div>
 
-          <div className="mt-4">
-            <RichText
-              label="Reason for Change (optional)"
-              value={formik.values.reason}
-              onChange={(value) => formik.setFieldValue("reason", value)}
-              placeholder="Provide a reason for changing the quota..."
-            />
-          </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-1">
+                  Reason for Adjustment
+                </label>
+                <textarea
+                  className="w-full px-4 py-3 bg-white dark:bg-secondary/5 border border-gray-300 dark:border-border rounded-xl text-sm dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all min-h-[100px]"
+                  placeholder="Provide a brief explanation for this change..."
+                  value={formik.values.reason}
+                  onChange={(e) => formik.setFieldValue("reason", e.target.value)}
+                />
+              </div>
+            </div>
 
-          <div className="mt-4 flex justify-end">
-            <SolidButton
-              title="Save Changes"
-              onClick={() => formik.handleSubmit()}
-              Icon={
-                isUpdating ? <Loader2 className="animate-spin" /> : <Save />
-              }
-              className="py-1.5"
-            />
+            <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-border">
+              <OutlineButton
+                title="Discard"
+                onClick={handleCancelEdit}
+                className="py-2.5 px-6"
+              />
+              <SolidButton
+                title={isUpdating ? "Saving..." : "Apply Changes"}
+                onClick={() => formik.handleSubmit()}
+                Icon={
+                  isUpdating ? <Loader2 className="animate-spin w-4 h-4" /> : <Save className="w-4 h-4" />
+                }
+                disabled={isUpdating}
+                className="py-2.5 px-8 text-sm font-bold shadow-lg"
+              />
+            </div>
           </div>
         </Modal>
       )}

@@ -144,156 +144,151 @@ const SetRearchAreas = () => {
 
   return (
     <div>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <h3 className="text-md  font-bold text-gray-500 mb-4">
+      <div className="bg-white dark:bg-card rounded-xl shadow-lg border border-gray-200 dark:border-border p-6 mb-8 transition-all duration-300">
+        <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-6">
           Research Areas
         </h3>
 
-        <div className="flex flex-col md:flex-row justify-between w-full gap-2">
-          <div className="relative w-full">
+        <div className="flex flex-col md:flex-row items-center justify-between w-full gap-4 mb-8">
+          <div className="relative w-full group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors w-4 h-4" />
             <input
               type="text"
-              placeholder="Search research areas..."
+              placeholder="Search existing research areas..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="border border-gray-300 rounded px-3 pl-11 py-2  w-full"
+              className="w-full pl-11 pr-4 py-2.5 bg-white dark:bg-secondary/5 border border-gray-300 dark:border-border rounded-xl text-sm dark:text-white transition-all outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
             />
-            <Search className="absolute left-3 top-2 text-gray-400" />
           </div>
 
           <SolidButton
-            title="Add"
-            className="w-fit py-1.5"
-            Icon={<PlusCircle />}
+            title="Add New Area"
+            className="w-full md:w-auto py-2.5 px-6 shadow-md shadow-blue-500/10"
+            Icon={<PlusCircle className="w-4 h-4" />}
             onClick={() => {
               setDisplayModal(true);
             }}
           />
         </div>
 
-        <div className="rounded-xl border-2 border-gray-300 mt-3 overflow-x-auto">
-          {researchAreas.length > 0 ? (
-            <table className="w-full  ">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left text-sm font-medium text-gray-600 bg-blue-50 px-2 py-3">
-                    ID
-                  </th>
-                  <th className="text-left text-sm font-medium text-gray-600 bg-blue-50 px-2 py-3">
-                    Research Area
-                  </th>
-                  <th className="text-center text-sm font-medium text-gray-600 bg-blue-50 px-2 py-3">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {researchAreas
-                  .filter((area) =>
-                    area.name.toLowerCase().includes(searchTerm.toLowerCase()),
-                  )
-                  .map((area, index) => (
-                    <tr key={index} className="border-b border-gray-200">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <code className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded">
-                            {area.id}
-                          </code>
-
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(area.id);
-                              toast.success("ID copied to clipboard!", {
-                                icon: <FaPaste className="text-slate-400" />,
-                                duration: 2000,
-                              });
-                            }}
-                            className="inline-flex items-center gap-2 hover:bg-gray-200 text-slate-700 rounded-md transition-colors duration-200 font-medium text-sm"
-                          >
-                            <Copy className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                      <td className="text-sm text-gray-800 py-3 px-2">
-                        {area.name}
-                      </td>
-                      <td className="text-sm flex justify-center text-gray-800 py-3 px-2">
-                        <OutlineButton
-                          Icon={<Trash2 className="h-5 w-5" />}
-                          title=""
-                          className="py-1 px-1"
-                          onClick={() => handleRemoveResearchArea(area.id)}
-                        />
-                        <SolidButton
-                          Icon={<Edit className="h-5 w-5" />}
-                          title="Edit"
-                          className="px-1 ml-2"
-                          onClick={() => {
-                            onEditClick(area);
-                            setDisplayModal(true);
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          ) : (
-            <div className="text-center py-10 text-gray-500">
-              No research areas found.
-            </div>
-          )}
+        <div className="rounded-2xl border border-gray-200 dark:border-border overflow-hidden shadow-inner">
+          <div className="overflow-x-auto">
+            {researchAreas.length > 0 ? (
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-50 dark:bg-secondary/10 border-b border-gray-200 dark:border-border">
+                    <th className="text-left text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 px-6 py-4">
+                      Research Area
+                    </th>
+                    <th className="text-center text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 px-6 py-4">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-border bg-white dark:bg-card">
+                  {researchAreas
+                    .filter((area) =>
+                      area.name.toLowerCase().includes(searchTerm.toLowerCase()),
+                    )
+                    .map((area, index) => (
+                      <tr 
+                        key={index} 
+                        className="hover:bg-gray-50 dark:hover:bg-secondary/5 transition-colors group"
+                      >
+                        <td className="text-sm font-medium text-gray-800 dark:text-gray-200 px-6 py-4">
+                          {area.name}
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex justify-center gap-2">
+                            <OutlineButton
+                              Icon={<Trash2 className="h-4 w-4" />}
+                              title=""
+                              className="py-1.5 px-2 hover:bg-red-50 dark:hover:bg-red-900/10 hover:text-red-600 hover:border-red-200 transition-all"
+                              onClick={() => handleRemoveResearchArea(area.id)}
+                            />
+                            <SolidButton
+                              Icon={<Edit className="h-4 w-4" />}
+                              title="Edit"
+                              className="py-1.5 px-4 text-xs font-bold"
+                              onClick={() => {
+                                onEditClick(area);
+                                setDisplayModal(true);
+                              }}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="text-center py-20 bg-gray-50/50 dark:bg-secondary/5">
+                <Search className="h-12 w-12 text-gray-300 dark:text-gray-700 mx-auto mb-3" />
+                <p className="text-gray-400 dark:text-gray-500 font-medium italic">
+                  No research areas found.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {displayModal && (
         <Modal
-          headTitle="Set Research Areas"
-          subHeadTitle=""
+          headTitle={editArea ? "Edit Research Area" : "Add Research Area"}
+          subHeadTitle={editArea ? `Modifying: ${editArea.name}` : "Create a new research area for your department"}
           handleCancel={handleCancel}
           buttonDisabled
           handleConfirm={() => {}}
           w="max-w-lg"
         >
-          <div>
-            <form onSubmit={formik.handleSubmit} className="space-y-3">
-              <AppInput
-                name="name"
-                label=" Research Area Name"
-                formik={formik}
-                type="text"
-              />
-              <AppInput
-                as="textarea"
-                label="Description (Optional)"
-                name="description"
-                formik={formik}
-              />
+          <div className="p-6">
+            <form onSubmit={formik.handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <AppInput
+                  name="name"
+                  label="Research Area Name"
+                  formik={formik}
+                  type="text"
+                  placeholder="e.g., Artificial Intelligence"
+                />
+                <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-1">
+                    Description (Optional)
+                  </label>
+                  <textarea
+                    name="description"
+                    className="w-full px-4 py-3 bg-white dark:bg-secondary/5 border border-gray-300 dark:border-border rounded-xl text-sm dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all min-h-[100px]"
+                    placeholder="Provide a brief description of this research area..."
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.description && formik.errors.description && (
+                    <p className="text-red-500 text-[10px] mt-1 ml-1">{formik.errors.description}</p>
+                  )}
+                </div>
+              </div>
 
-              <div className="flex w-full justify-end mt-2">
-                {editArea ? (
-                  <SolidButton
-                    title={"Save"}
-                    Icon={
-                      onUpdating ? (
-                        <Loader2 className="animate-spin" />
-                      ) : (
-                        <Save />
-                      )
-                    }
-                    type="submit"
-                    disabled={onUpdating}
-                  />
-                ) : (
-                  <SolidButton
-                    title={editArea ? "Save" : "Create"}
-                    Icon={
-                      onAdding ? <Loader2 className="animate-spin" /> : <Save />
-                    }
-                    type="submit"
-                    disabled={onAdding}
-                  />
-                )}
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-border">
+                <OutlineButton
+                  title="Cancel"
+                  onClick={handleCancel}
+                  className="py-2.5 px-6"
+                />
+                <SolidButton
+                  title={editArea ? "Save Changes" : "Create Area"}
+                  Icon={
+                    onUpdating || onAdding ? (
+                      <Loader2 className="animate-spin w-4 h-4" />
+                    ) : (
+                      <Save className="w-4 h-4" />
+                    )
+                  }
+                  type="submit"
+                  disabled={onUpdating || onAdding}
+                  className="py-2.5 px-8 text-sm font-bold shadow-lg"
+                />
               </div>
             </form>
           </div>

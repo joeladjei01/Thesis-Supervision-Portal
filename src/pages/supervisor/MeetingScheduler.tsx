@@ -47,10 +47,22 @@ interface MeetingItemProps {
 // Utility Functions
 const getStatusConfig = (status: MeetingStatus) => {
   const configs = {
-    Completed: { className: "bg-green-100 text-green-800 border-green-200" },
-    Pending: { className: "bg-yellow-100 text-yellow-800 border-yellow-200" },
-    Cancelled: { className: "bg-red-100 text-red-800 border-red-200" },
-    "On-going": { className: "bg-blue-100 text-blue-800 border-blue-200" },
+    Completed: {
+      className:
+        "bg-green-100 text-green-800 border-green-200 dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/20",
+    },
+    Pending: {
+      className:
+        "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/20",
+    },
+    Cancelled: {
+      className:
+        "bg-red-100 text-red-800 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20",
+    },
+    "On-going": {
+      className:
+        "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20",
+    },
   };
   return configs[status];
 };
@@ -127,32 +139,32 @@ const MeetingItem: React.FC<MeetingItemProps> = ({
 
   return (
     <div>
-      <div className=" flex flex-col md:flex-row items-center text-center md:text-left gap-3 p-4 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-shadow">
+      <div className="flex flex-col md:flex-row items-center text-center md:text-left gap-3 p-4 bg-card border border-border rounded-lg hover:shadow-md transition-shadow">
         <div>
-          <Users2 size={32} className="text-gray-400" />
+          <Users2 size={32} className="text-muted-foreground" />
         </div>
 
         <div
-          className="cursor-pointer flex-1 min-w-0  group"
+          className="cursor-pointer flex-1 min-w-0 group"
           onClick={() => {
             setMeetingDetails(meeting);
             setIsModalOpen(true);
           }}
         >
-          <h4 className="font-medium group-hover:text-blue-600 text-gray-900 truncate">
+          <h4 className="font-medium group-hover:text-primary text-foreground truncate">
             {meeting.session_title}
           </h4>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             {shortenText(
               meeting.invitees.map((invitee) => invitee.name).join(", "),
               40,
             )}
           </p>
           <div className="flex items-center gap-4 mt-1">
-            <span className="text-xs text-gray-500 flex items-center gap-1">
+            <span className="text-xs text-muted-foreground flex items-center gap-1">
               {formatISODate(meeting.start_time)}
             </span>
-            <span className="text-xs text-gray-500 flex items-center gap-1">
+            <span className="text-xs text-muted-foreground flex items-center gap-1">
               <Clock size={12} />
               {formatISOTime(meeting.start_time)}
             </span>
@@ -161,7 +173,7 @@ const MeetingItem: React.FC<MeetingItemProps> = ({
 
         <div className="flex flex-col items-end gap-2">
           <StatusBadge status={statusLabel as MeetingStatus} />
-          <span className="text-xs text-gray-500 flex items-center gap-1">
+          <span className="text-xs text-muted-foreground flex items-center gap-1">
             {isVirtual ? <Video size={12} /> : <Users size={12} />}
             {isVirtual ? "Virtual" : "In-Person"}
           </span>
@@ -205,19 +217,19 @@ const MeetingItem: React.FC<MeetingItemProps> = ({
         >
           <div className="space-y-6">
             {/* Header Section */}
-            <div className="border-b border-gray-200 pb-6">
+            <div className="border-b border-border pb-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-2xl font-bold text-foreground mb-3">
                     {meetingDetails.session_title}
                   </h3>
                   <div className="flex items-center gap-3">
                     <StatusBadge status={statusLabel as MeetingStatus} />
-                    <span className="flex items-center gap-1.5 text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full">
+                    <span className="flex items-center gap-1.5 text-sm text-muted-foreground bg-muted px-3 py-1.5 rounded-full">
                       {isVirtual ? (
-                        <Video size={14} className="text-blue-500" />
+                        <Video size={14} className="text-blue-500 dark:text-blue-400" />
                       ) : (
-                        <Users size={14} className="text-purple-500" />
+                        <Users size={14} className="text-purple-500 dark:text-purple-400" />
                       )}
                       {isVirtual ? "Virtual Meeting" : "In-Person Meeting"}
                     </span>
@@ -225,15 +237,15 @@ const MeetingItem: React.FC<MeetingItemProps> = ({
                 </div>
               </div>
               {meetingDetails.description && (
-                <p className="text-gray-600 mt-4 leading-relaxed">
+                <p className="text-muted-foreground mt-4 leading-relaxed">
                   {meetingDetails.description}
                 </p>
               )}
             </div>
 
             {/* Meta Info Card */}
-            <div className=" p-2 ">
-              <div className="flex items-start gap-3  text-xs text-gray-600">
+            <div className="p-2">
+              <div className="flex items-start gap-3 text-xs text-muted-foreground">
                 <div className="flex justify-between py-1.5">
                   <span className="font-medium">Created:</span>
                   <span>
@@ -254,24 +266,24 @@ const MeetingItem: React.FC<MeetingItemProps> = ({
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left Column */}
-              <div className="space-y-2 border border-gray-200 rounded-lg">
+              <div className="space-y-4 border border-border rounded-lg bg-card/50">
                 {/* Date & Time Card */}
-                <div className=" rounded-xl p-5  ">
+                <div className="rounded-xl p-5">
                   <div className="flex items-start gap-3">
-                    <div className="bg-gray-100 rounded-lg p-2.5">
-                      <Calendar size={20} className="text-gray-600" />
+                    <div className="bg-muted rounded-lg p-2.5">
+                      <Calendar size={20} className="text-muted-foreground" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2">
+                      <h4 className="text-sm font-semibold text-foreground mb-2">
                         Date & Time
                       </h4>
                       <div className="flex items-center gap-2">
-                        <p className="text-sm text-gray-700 font-medium">
+                        <p className="text-sm text-foreground font-medium">
                           {formatISODate(meetingDetails.start_time)}
                         </p>
                         <div className="flex items-center gap-2">
-                          <Clock size={14} className="text-blue-800" />
-                          <p className="text-sm text-gray-600">
+                          <Clock size={14} className="text-primary" />
+                          <p className="text-sm text-muted-foreground">
                             {formatISOTime(meetingDetails.start_time)}
                             {meetingDetails.end_time
                               ? ` — ${formatISOTime(meetingDetails.end_time)}`
@@ -284,16 +296,16 @@ const MeetingItem: React.FC<MeetingItemProps> = ({
                 </div>
 
                 {/* Location Card */}
-                <div className=" rounded-xl p-5 ">
+                <div className="rounded-xl p-5 border-t border-border">
                   <div className="flex items-start gap-3">
-                    <div className="bg-gray-100 rounded-lg p-2.5">
-                      <MapPin size={20} className="text-gray-600" />
+                    <div className="bg-muted rounded-lg p-2.5">
+                      <MapPin size={20} className="text-muted-foreground" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2">
+                      <h4 className="text-sm font-semibold text-foreground mb-2">
                         Location
                       </h4>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-foreground">
                         {meetingDetails.location ||
                           (isVirtual ? "Online" : "TBD")}
                       </p>
@@ -302,7 +314,7 @@ const MeetingItem: React.FC<MeetingItemProps> = ({
                           href={meetingDetails.zoom_link}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-2 mt-3 text-sm font-medium text-blue-600 hover:text-blue-700 bg-white px-4 py-2 rounded-lg border border-blue-200 hover:border-blue-300 transition-all"
+                          className="inline-flex items-center gap-2 mt-3 text-sm font-medium text-primary hover:text-primary/80 bg-background px-4 py-2 rounded-lg border border-border transition-all"
                         >
                           <Video size={14} />
                           Join Meeting
@@ -314,15 +326,15 @@ const MeetingItem: React.FC<MeetingItemProps> = ({
               </div>
 
               {/* Right Column */}
-              <div className="bg-gray-50 border border-gray-200 space-y-4">
+              <div className="bg-muted/30 border border-border rounded-lg">
                 {/* Invitees Card */}
-                <div className=" rounded-xl p-5  ">
+                <div className="rounded-xl p-5">
                   <div className="flex items-start gap-3">
-                    <div className="bg-gray-700 rounded-lg p-2.5">
-                      <Users2 size={20} className="text-white" />
+                    <div className="bg-primary rounded-lg p-2.5">
+                      <Users2 size={20} className="text-primary-foreground" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                      <h4 className="text-sm font-semibold text-foreground mb-3">
                         Invitees ({meetingDetails.invitees?.length || 0})
                       </h4>
                       <ul className="space-y-3">
@@ -331,23 +343,23 @@ const MeetingItem: React.FC<MeetingItemProps> = ({
                           meetingDetails.invitees.map((inv) => (
                             <li
                               key={inv.id}
-                              className="flex items-start gap-3 bg-white rounded-lg p-3 border border-gray-200"
+                              className="flex items-start gap-3 bg-card rounded-lg p-3 border border-border"
                             >
-                              <div className="bg-gradient-to-br from-blue-100 to-purple-100 rounded-full p-2">
-                                <User size={14} className="text-blue-600" />
+                              <div className="bg-primary/10 rounded-full p-2">
+                                <User size={14} className="text-primary" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 truncate">
+                                <p className="text-sm font-medium text-foreground truncate">
                                   {inv.name}
                                 </p>
-                                <p className="text-xs text-gray-500 truncate">
+                                <p className="text-xs text-muted-foreground truncate">
                                   {inv.email}
                                 </p>
                               </div>
                             </li>
                           ))
                         ) : (
-                          <li className="text-sm text-gray-500 italic">
+                          <li className="text-sm text-muted-foreground italic">
                             No invitees
                           </li>
                         )}
@@ -430,13 +442,13 @@ const MeetingScheduler: React.FC = () => {
 
         {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-8"> */}
         <div className="space-y-4">
-          <div className="lg:row-1 lg:col-span-1 ">
-            <div className="bg-white min-h-170 border border-gray-200 rounded-lg p-4">
+          <div className="lg:row-1 lg:col-span-1">
+            <div className="bg-card min-h-170 border border-border rounded-lg p-4">
               {/* <Header
                 title="Your Schedule"
                 subtitle="Manage your upcoming meetings with students"
               /> */}
-              <h3 className="text-lg font-cal-sans tracking-wide text-gray-500 mb-4">
+              <h3 className="text-lg font-cal-sans tracking-wide text-muted-foreground mb-4">
                 Your Schedule
               </h3>
 
@@ -461,10 +473,10 @@ const MeetingScheduler: React.FC = () => {
                 })}
 
                 {filteredMeetings.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-muted-foreground">
                     {/* <Calendar
                       size={48}
-                      className="mx-auto mb-4 text-gray-300"
+                      className="mx-auto mb-4 text-muted-foreground/30"
                     /> */}
                     <p>No {activeTab} meetings found</p>
                   </div>
@@ -491,7 +503,7 @@ const MeetingScheduler: React.FC = () => {
                 setOpenModal(false);
               }}
             >
-              <div className="bg-white">
+              <div className="bg-card">
                 <ScheduleMeetingForm
                   editMeetingData={editMeetingData}
                   setEditMeetingData={setEditMeetingData}

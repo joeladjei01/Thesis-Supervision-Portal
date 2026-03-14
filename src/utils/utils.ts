@@ -37,4 +37,4 @@ export const handleLogout = async (
 };
 
 
-export const cardDefaultStyle = "border-2 bg-card grow rounded-xl border-gray-300 dark:border-gray-600 px-8 py-6"
+export const cardDefaultStyle = "border-2 bg-card grow rounded-xl border-border px-8 py-6"

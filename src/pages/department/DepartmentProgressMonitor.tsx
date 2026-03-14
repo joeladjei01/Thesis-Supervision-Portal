@@ -6,11 +6,11 @@ import React from "react";
 const DepartmentProgressMonitor = () => {
   const { students, supervisors } = useDepartmentDataStore();
   return (
-    <div>
-      <div>
+    <div className="min-h-screen transition-colors duration-300">
+      <div className="mb-6">
         <Header
           title={"Student Progress"}
-          subtitle={"Monitor the progress of students"}
+          subtitle={"Monitor the progress of students across chapters"}
         />
       </div>
       <StudentProgress students={students} supervisors={supervisors} />

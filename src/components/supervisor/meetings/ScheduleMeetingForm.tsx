@@ -1,17 +1,15 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik"; // Only need useFormik now
 import * as Yup from "yup";
 import CustomSelect from "../../shared/custom-select";
 import {
   handleMultiSelectionOnChange,
-  handleSelectionOnChange,
 } from "../../../utils/helpers";
 import AppInput from "../../shared/input/AppInput";
 import SolidButton from "../../shared/buttons/SolidButton";
-import Header from "../../shared/text/Header";
 import MultiSelect from "../../../components/shared/custom-select/MultiSelect";
 import { useSupervisorDataStore } from "../../../store/useSupervisorDataStore";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import toast from "react-hot-toast";
 import { FaLaptop, FaUsers } from "react-icons/fa";
@@ -35,73 +33,7 @@ interface FormData {
   location: string;
 }
 
-interface Student {
-  id: string;
-  name: string;
-}
 
-const MOCK_STUDENTS: Student[] = [
-  { id: "1", name: "Alice Johnson" },
-  { id: "2", name: "Bob Smith" },
-  { id: "3", name: "Charlie Brown" },
-  { id: "4", name: "Diana Prince" },
-];
-
-const MOCK_TIMES: string[] = [
-  "",
-  "10:00 AM",
-  "11:30 AM",
-  "02:00 PM",
-  "03:30 PM",
-  "04:00 PM",
-];
-
-const WEEK_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-// Simplified hardcoded calendar data for May 2024 to match the image visually.
-// Dates are padded to fill the weeks correctly (May 1st is a Wednesday).
-type Mdate = {
-  day: number;
-  month: "current" | "prev" | "next";
-};
-
-const MAY_DATES: Mdate[] = [
-  { day: 28, month: "prev" },
-  { day: 29, month: "prev" },
-  { day: 30, month: "prev" },
-  { day: 1, month: "current" },
-  { day: 2, month: "current" },
-  { day: 3, month: "current" },
-  { day: 4, month: "current" },
-  { day: 5, month: "current" },
-  { day: 6, month: "current" },
-  { day: 7, month: "current" },
-  { day: 8, month: "current" },
-  { day: 9, month: "current" },
-  { day: 10, month: "current" },
-  { day: 11, month: "current" },
-  { day: 12, month: "current" },
-  { day: 13, month: "current" },
-  { day: 14, month: "current" },
-  { day: 15, month: "current" },
-  { day: 16, month: "current" },
-  { day: 17, month: "current" },
-  { day: 18, month: "current" },
-  { day: 19, month: "current" },
-  { day: 20, month: "current" },
-  { day: 21, month: "current" },
-  { day: 22, month: "current" },
-  { day: 23, month: "current" },
-  { day: 24, month: "current" },
-  { day: 25, month: "current" },
-  { day: 26, month: "current" },
-  { day: 27, month: "current" },
-  { day: 28, month: "current" },
-  { day: 29, month: "current" },
-  { day: 30, month: "current" },
-  { day: 31, month: "current" },
-  { day: 1, month: "next" },
-];
 
 // --- Validation Schema (Yup) ---
 
@@ -132,11 +64,11 @@ const MeetingTypeToggle: React.FC<{
   const buttonClass = (isActive: boolean) =>
     `px-8 py-2.5 w-1/2 text-sm cursor-pointer font-semibold transition-all duration-300 ease-in-out 
      ${
-       isActive ? "bg-blue-900 text-blue-50 " : "bg-transparent text-blue-900"
+       isActive ? "bg-primary text-primary-foreground" : "bg-transparent text-foreground hover:bg-muted"
      }`;
 
   return (
-    <div className="flex w-full overflow-auto border-b border-gray-300 px-7 mt-3 rounded-sm">
+    <div className="flex w-full overflow-auto border-b border-border px-7 mt-3 rounded-sm">
       <button
         type="button"
         className={` ${buttonClass(isVirtual)}`}
@@ -226,12 +158,12 @@ const DatePicker: React.FC<{
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="mt-6 p-4 bg-white rounded-xl shadow-lg border border-gray-200">
+    <div className="mt-6 p-4 bg-card rounded-xl shadow-lg border border-border">
       {/* Calendar Header */}
-      <div className="flex items-center justify-between text-gray-900 mb-4">
+      <div className="flex items-center justify-between text-foreground mb-4">
         <button
           type="button"
-          className="text-gray-400 hover:text-gray-600 p-1"
+          className="text-muted-foreground hover:text-foreground p-1"
           onClick={handlePrevMonth}
           aria-label="Previous month"
         >
@@ -255,7 +187,7 @@ const DatePicker: React.FC<{
         </span>
         <button
           type="button"
-          className="text-gray-400 hover:text-gray-600 p-1"
+          className="text-muted-foreground hover:text-foreground p-1"
           onClick={handleNextMonth}
           aria-label="Next month"
         >
@@ -276,7 +208,7 @@ const DatePicker: React.FC<{
       </div>
 
       {/* Days of the Week */}
-      <div className="grid grid-cols-7 text-center text-sm font-medium text-gray-500 mb-2">
+      <div className="grid grid-cols-7 text-center text-sm font-medium text-muted-foreground mb-2">
         {daysOfWeek.map((day) => (
           <div key={day}>{day}</div>
         ))}
@@ -294,12 +226,12 @@ const DatePicker: React.FC<{
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200
                   ${
                     date.month === "current"
-                      ? "font-semibold text-gray-900 hover:bg-blue-100"
-                      : "text-gray-400 cursor-not-allowed opacity-50"
+                      ? "font-semibold text-foreground hover:bg-muted"
+                      : "text-muted-foreground cursor-not-allowed opacity-30"
                   }
                   ${
                     isSelected(date.day)
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : ""
                   }`}
               >
@@ -335,8 +267,8 @@ const ScheduleMeetingForm: React.FC<ScheduleMeetingFormProps> = ({
   const axios = useAxiosPrivate();
 
   const buttonClass = (isActive: boolean) =>
-    `px-8 py-3 w-1/2 text-sm cursor-pointer font-semibold text-blue-900 rounded-sm transition-all duration-300 ease-in-out 
-     ${isActive ? "bg-white " : "bg-transparent "}`;
+    `px-8 py-3 w-1/2 text-sm cursor-pointer font-semibold text-foreground rounded-sm transition-all duration-300 ease-in-out 
+     ${isActive ? "bg-card shadow-sm" : "bg-transparent hover:bg-muted/50"}`;
 
   useEffect(() => {
     if (editMeetingData) {
@@ -479,30 +411,21 @@ const ScheduleMeetingForm: React.FC<ScheduleMeetingFormProps> = ({
   // Helper function for rendering manual error messages
   const renderError = (name: keyof FormData) => {
     return formik.touched[name] && formik.errors[name] ? (
-      <div className="mt-1 text-sm text-red-500">{formik.errors[name]}</div>
+      <div className="mt-1 text-sm text-destructive">{formik.errors[name]}</div>
     ) : null;
   };
 
-  // Helper function for dynamic input styling
-  const getInputClasses = (name: keyof FormData) => {
-    return `block w-full rounded-xl border px-4 py-3 appearance-none cursor-pointer 
-      ${
-        formik.touched[name] && formik.errors[name]
-          ? "border-red-500 focus:ring-red-500"
-          : "border-gray-300 dark:border-gray-600 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-      }`;
-  };
 
   return (
     <div className="flex items-center justify-center">
       <form
         onSubmit={formik.handleSubmit}
-        className="w-full border border-gray-300 p-4 rounded-md space-y-6"
+        className="w-full border border-border p-4 rounded-md space-y-6 bg-card"
       >
         <div>
           <label
             htmlFor="studentId"
-            className={"text-blue-900 mb-1.5 text-sm font-medium leading-6"}
+            className={"text-foreground mb-1.5 text-sm font-medium leading-6"}
           >
             Student
           </label>
@@ -523,7 +446,7 @@ const ScheduleMeetingForm: React.FC<ScheduleMeetingFormProps> = ({
               className="mr-1"
             />{" "}
             <label
-              className="text-sm text-gray-600 hover:cursor-pointer"
+              className="text-sm text-muted-foreground hover:cursor-pointer"
               onClick={() =>
                 formik.setFieldValue(
                   "studentId",
@@ -541,11 +464,9 @@ const ScheduleMeetingForm: React.FC<ScheduleMeetingFormProps> = ({
                 label: `${s.student.name} - ${s.student.student_id}`,
               }))}
               onChange={(options) =>
-                handleMultiSelectionOnChange(options, "studentId", formik)
+                formik.setFieldValue("studentId", options)
               }
               value={formik.values.studentId}
-              isClearable
-              placeholder="Select Students"
             />
           </div>
           {renderError("studentId")}
@@ -555,7 +476,7 @@ const ScheduleMeetingForm: React.FC<ScheduleMeetingFormProps> = ({
         <div className="pt-4">
           <label
             htmlFor="meetingType"
-            className={"text-blue-900 text-sm font-medium leading-6"}
+            className={"text-foreground text-sm font-medium leading-6"}
           >
             Meeting Type
           </label>
@@ -572,7 +493,7 @@ const ScheduleMeetingForm: React.FC<ScheduleMeetingFormProps> = ({
 
         {/* 4. Time Select (Standard HTML Select) */}
         {formik.values.meetingType === "Virtual" && (
-          <div className="flex w-full overflow-auto bg-blue-100 p-[3px] rounded-sm">
+          <div className="flex w-full overflow-auto bg-muted p-[3px] rounded-lg">
             <button
               type="button"
               className={` ${buttonClass(
@@ -607,7 +528,7 @@ const ScheduleMeetingForm: React.FC<ScheduleMeetingFormProps> = ({
             />
             {/* Render error manually. Note: The text-center class is kept for visual placement. */}
             {formik.touched.selectedDate && formik.errors.selectedDate && (
-              <div className="text-sm text-red-500 text-center">
+              <div className="text-sm text-destructive text-center">
                 {formik.errors.selectedDate}
               </div>
             )}
@@ -628,8 +549,8 @@ const ScheduleMeetingForm: React.FC<ScheduleMeetingFormProps> = ({
         {editMeetingData && (
           <CustomSelect
             label="Status"
-            onChange={(option) => formik.setFieldValue("status", option?.value)}
-            value={formik.values.status}
+            onChange={(option) => formik.setFieldValue("status", option?.value || "")}
+            value={formik.values.status || ""}
             options={[
               { value: "pending", label: "Pending" },
               { value: "ongoing", label: "Ongoing" },
