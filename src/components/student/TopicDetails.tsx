@@ -18,53 +18,52 @@ interface TopicDetailsProps {
   onBack: () => void;
 }
 
-const TopicDetails: React.FC<TopicDetailsProps> = ({ topic, onBack }) => {
+const TopicDetails: React.FC<TopicDetailsProps> = ({ topic }) => {
   return (
     <div className="max-w-4xl relative mx-auto ">
-      <h1 className="text-2xl text-blue-900 font-bold  mb-4">
-        <span className={"text-gray-600 py-2 text-lg"}>Proposed Topic:</span>
+      <h1 className="text-2xl text-foreground font-bold mb-6">
+        <span className={"text-muted-foreground py-2 text-sm uppercase tracking-wider font-semibold"}>Proposed Topic:</span>
         <br />
         {topic.title}
       </h1>
-      <p className="text-sm text-gray-500 mb-2">
+      <p className="text-sm text-muted-foreground mb-1">
         Created At: {new Date(topic.created_at).toLocaleString()}
       </p>
-      <p className="text-sm text-gray-500 mb-4">
+      <p className="text-sm text-muted-foreground mb-6">
         Last Updated: {new Date(topic.updated_at).toLocaleString()}
       </p>
 
       <div className="absolute top-0 right-4 flex gap-3 items-center mb-6">
-        <h2 className="text-md font-semibold text-gray-500">Status</h2>
+        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</h2>
         <p
-          className={`text-sm font-medium px-3 py-1 rounded-full inline-block ${
+          className={`text-xs font-bold px-3 py-1 rounded-full border inline-block ${
             topic.status === "approved"
-              ? "bg-green-100 text-green-700"
+              ? "bg-green-500/10 text-green-500 border-green-500/20"
               : topic.status === "pending"
-                ? "bg-yellow-100 text-yellow-700"
-                : "bg-red-100 text-red-700"
+                ? "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
+                : "bg-destructive/10 text-destructive border-destructive/20"
           }`}
         >
-          {/* {topic.status.charAt(0).toUpperCase() + topic.status.slice(1)} */}
-          {topic.status}
+          {topic.status.toUpperCase()}
         </p>
       </div>
 
-      <div className="mb-6">
-        <h2 className="text-md font-medium text-blue-900 mb-1">Description</h2>
+      <div className="mb-8">
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">Description</h2>
 
         <div
-          className="min-h-30 border border-gray-300 p-3 rounded-lg text-gray-700 leading-relaxed"
+          className="min-h-30 border border-border p-4 rounded-xl text-foreground leading-relaxed bg-muted/30"
           dangerouslySetInnerHTML={{ __html: topic.description }}
         />
       </div>
 
       {topic.methodology && (
-        <div className="mb-6">
-          <h2 className="text-md font-medium text-blue-900 mb-1">
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">
             Aim and Objectives
           </h2>
           <div
-            className="min-h-30 border border-gray-300 p-3 rounded-lg text-gray-700 leading-relaxed"
+            className="min-h-30 border border-border p-4 rounded-xl text-foreground leading-relaxed bg-muted/30"
             dangerouslySetInnerHTML={{ __html: topic.methodology }}
           />
         </div>

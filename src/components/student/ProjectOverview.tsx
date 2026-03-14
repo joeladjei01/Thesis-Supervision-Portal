@@ -38,36 +38,36 @@ const ProgressBar: React.FC<IProgressBarProps> = ({
       case "approved":
         return { icon: <CheckCircle className="w-4 h-4 text-green-500" />, color: "bg-green-500", text: "Approved", progress: 100 };
       case "in-progress":
-        return { icon: <Play className="w-4 h-4 text-blue-800" />, color: "bg-blue-700", text: "In Progress", progress: 55 };
+        return { icon: <Play className="w-4 h-4 text-primary" />, color: "bg-primary", text: "In Progress", progress: 55 };
       case "not-started":
-        return { icon: <AlertCircle className="w-4 h-4 text-gray-400" />, color: "bg-gray-400", text: "Not Started" ,progress: 0 };
+        return { icon: <AlertCircle className="w-4 h-4 text-muted-foreground" />, color: "bg-muted-foreground/30", text: "Not Started" ,progress: 10 };
       case "reject":
-        return { icon: <AlertCircle className="w-4 h-4 text-red-500" />, color: "bg-red-500", text: "Rejected", progress: 100 };
+        return { icon: <AlertCircle className="w-4 h-4 text-destructive" />, color: "bg-destructive", text: "Rejected", progress: 100 };
       case "revise":
         return { icon: <AlertCircle className="w-4 h-4 text-yellow-500" />, color: "bg-yellow-500", text: "Revise", progress: 75 };
       case "due":
-        return { icon: <AlertCircle className="w-4 h-4 text-red-500" />, color: "bg-red-300", text: "Due", progress: 25 };
+        return { icon: <AlertCircle className="w-4 h-4 text-destructive" />, color: "bg-destructive/50", text: "Due", progress: 25 };
         default:
-        return { icon: <AlertCircle className="w-4 h-4 text-gray-400" />, color: "bg-gray-400", text: "Unknown", progress: 0 };
+        return { icon: <AlertCircle className="w-4 h-4 text-muted-foreground" />, color: "bg-muted", text: "Unknown", progress: 0 };
     }
   };
 
   const { icon, color, text, progress } = getStatusAssets();
 
   return (
-    <div className="mb-8">
-      <div className="flex items-center justify-between mb-1">
+    <div className="mb-8 last:mb-0">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
           {icon}
-          <span className="ml-2 text-sm font-medium text-gray-900">
+          <span className="ml-2 text-sm font-semibold text-foreground">
             {label}
           </span>
         </div>
-        <span className="text-xs text-gray-500">{text}</span>
+        <span className="text-xs font-medium text-muted-foreground">{text}</span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-muted rounded-full h-2 overflow-hidden border border-border/10">
         <div
-          className={`h-2 rounded-full transition-all duration-500 ${color}`}
+          className={`h-2 rounded-full transition-all duration-700 ease-out ${color}`}
           style={{ width: `${progress}%` }}
         ></div>
       </div>
@@ -77,28 +77,28 @@ const ProgressBar: React.FC<IProgressBarProps> = ({
 
 const ProjectOverview: React.FC<IProjectOverviewProps> = ({ project }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-      <h3 className="text-lg font-semibold font-nunito-sans text-slate-700 mb-4 flex items-center">
-        <FileText className="w-5 h-5 mr-2" />
+    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
+      <h3 className="text-lg font-bold text-foreground mb-6 flex items-center">
+        <FileText className="w-5 h-5 mr-3 text-primary" />
         Project Overview
       </h3>
 
-      <div className="mb-6 border-b border-gray-200 pb-4">
-        <div className="mb-2">
-          <p className="text-sm font-medium text-gray-600 " >
+      <div className="mb-6 border-b border-border pb-6">
+        <div className="mb-4">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1" >
             Project Title
           </p>
-          <p className="text-md text-gray-900">{project.title}</p>
+          <p className="text-base font-medium text-foreground leading-snug">{project.title}</p>
         </div>
         <div>
-          <p className="text-sm font-medium text-gray-600 mb-1">Supervisor</p>
-          <p className="text-md text-gray-900">{project.supervisor}</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Supervisor</p>
+          <p className="text-base font-medium text-foreground">{project.supervisor}</p>
         </div>
       </div>
 
-      <div className="px-4">
-        <div className="mb-4">
-          <p className="text-sm font-medium text-gray-600 mb-3">
+      <div className="px-2">
+        <div className="mb-6">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             Project Timeline
           </p>
         </div>

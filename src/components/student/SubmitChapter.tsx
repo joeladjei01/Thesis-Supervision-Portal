@@ -28,17 +28,15 @@ export const getFileIcon = (fileName: string) => {
   const extension = fileName.split(".").pop()?.toLowerCase();
   switch (extension) {
     case "pdf":
-      return <FaFilePdf className="text-red-600 mr-2" />;
+      return <FaFilePdf className="text-destructive mr-2" />;
     case "doc":
-      return <FaFileWord className="text-blue-600 mr-2" />;
     case "docx":
-      return <FaFileWord className="text-blue-600 mr-2" />;
+      return <FaFileWord className="text-primary mr-2" />;
     case "ppt":
-      return <FaFilePowerpoint className="text-orange-600 mr-2" />;
     case "pptx":
-      return <FaFilePowerpoint className="text-orange-600 mr-2" />;
+      return <FaFilePowerpoint className="text-orange-500 mr-2" />;
     default:
-      return <File className="text-gray-600 mr-2" />;
+      return <File className="text-muted-foreground mr-2" />;
   }
 };
 
@@ -135,17 +133,17 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
 
   return (
     <div className="mb-6">
-      <label className={"text-blue-900 mb-3 text-sm font-medium"}>
+      <label className={"text-foreground mb-3 text-sm font-semibold uppercase tracking-wider block"}>
         Upload Documents
       </label>
       <div
-        className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg text-center cursor-pointer transition duration-300
+        className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-xl text-center cursor-pointer transition-all duration-300
             ${
               isDragging
-                ? "border-blue-600 bg-blue-50"
-                : "border-gray-300 bg-gray-50"
+                ? "border-primary bg-primary/5 scale-[1.01]"
+                : "border-border bg-muted/30 hover:bg-muted/50 hover:border-muted-foreground/50"
             }
-            ${touched && error ? "border-red-500 bg-red-50" : ""}
+            ${touched && error ? "border-destructive bg-destructive/5" : ""}
           `}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
@@ -155,11 +153,11 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-10 w-10 text-blue-500 mb-2"
+          className="h-12 w-12 text-primary/60 mb-3"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          strokeWidth={2}
+          strokeWidth={1.5}
         >
           <path
             strokeLinecap="round"
@@ -168,8 +166,8 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
           />
         </svg>
         <p
-          className={`font-semibold text-sm ${
-            files.length > 0 ? "text-gray-900" : "text-gray-600"
+          className={`font-bold text-sm ${
+            files.length > 0 ? "text-foreground" : "text-muted-foreground"
           }`}
         >
           {files.length > 0
@@ -182,23 +180,23 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
             {files.map((file, index) => (
               <div
                 key={`${file.name}-${index}`}
-                className="flex items-center justify-between gap-4 bg-white border border-gray-300 p-3 rounded-md text-sm text-gray-500"
+                className="flex items-center justify-between gap-4 bg-card border border-border p-3 rounded-lg text-sm text-foreground shadow-sm"
               >
                 <div className="flex-1 text-left">
-                  <p className="font-medium text-xs">{file.name}</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="font-semibold text-xs truncate max-w-[200px]">{file.name}</p>
+                  <p className="text-xs text-muted-foreground">
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>
                 <button
                   type="button"
-                  className="bg-red-600 p-1 hover:bg-red-400 rounded text-white hover:text-white flex-shrink-0"
+                  className="bg-destructive/10 p-1.5 hover:bg-destructive text-destructive hover:text-destructive-foreground rounded-md transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     removeFile(index);
                   }}
                 >
-                  <Trash size={16} />
+                  <Trash size={14} />
                 </button>
               </div>
             ))}
@@ -207,7 +205,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
 
         <p
           className={`text-xs mt-1 ${
-            touched && error ? "text-red-500" : "text-gray-500"
+            touched && error ? "text-destructive" : "text-muted-foreground"
           }`}
         >
           {files.length > 0
@@ -215,7 +213,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
             : displayText}
         </p>
         {touched && error && (
-          <p className="text-xs text-red-600 mt-2 font-medium">{error}</p>
+          <p className="text-xs text-destructive mt-2 font-semibold italic">{error}</p>
         )}
         <input
           id="file-upload-input"
@@ -412,34 +410,20 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
   const hideSubmissionFields = isApproved || isApprovedByFeedback;
 
   const getDecisionColor = (decision: string | undefined) => {
-    if (!decision) return "bg-gray-100 text-gray-800";
+    if (!decision) return "bg-muted text-muted-foreground border-border";
     switch (decision.toLowerCase()) {
       case "approved":
-        return "bg-green-100 text-green-800";
+        return "bg-green-500/10 text-green-500 border-green-500/20";
       case "revise":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-500/10 text-yellow-500 border-yellow-500/20";
       case "reject":
       case "rejected":
-        return "bg-red-100 text-red-800";
+        return "bg-destructive/10 text-destructive border-destructive/20";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-muted text-muted-foreground border-border";
     }
   };
 
-  const getDecisionContainerColor = (decision: string | undefined) => {
-    if (!decision) return "bg-gray-50 border-gray-200";
-    switch (decision.toLowerCase()) {
-      case "approved":
-        return "bg-green-50 border-green-200";
-      case "revise":
-        return "bg-yellow-50 border-yellow-200";
-      case "reject":
-      case "rejected":
-        return "bg-red-50 border-red-200";
-      default:
-        return "bg-gray-50 border-gray-200";
-    }
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -697,39 +681,38 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
 
   return (
     <div className="w-full mx-auto ">
-      <div className="mb-6 rounded-xl border border-gray-200 bg-white p-4">
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">
+      <div className="mb-6 rounded-xl border border-border bg-card p-4 shadow-sm">
+        <h3 className="text-sm font-semibold text-foreground mb-3">
           Submission Status
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="rounded-lg bg-gray-50 border border-gray-200 p-3">
-            <p className="text-xs text-gray-500">Status</p>
-            <p className="text-sm font-medium text-gray-800">
+          <div className="rounded-lg bg-muted border border-border p-3">
+            <p className="text-xs text-muted-foreground">Status</p>
+            <p className="text-sm font-semibold text-foreground">
               {isApproved || isApprovedByFeedback
                 ? "Approved"
                 : previousSubmission?.status || "Not submitted"}
             </p>
           </div>
           <div
-            className={`rounded-lg border p-3 ${getDecisionContainerColor(
-              latestFeedback?.decision,
-            )}`}
+            className={`rounded-lg border p-3 ${
+              latestFeedback?.decision ? "border-border" : "bg-muted border-border"
+            }`}
           >
-            <p className="text-xs text-gray-500">Decision</p>
+            <p className="text-xs text-muted-foreground">Decision</p>
             <p
-              className={`text-sm font-medium px-3 py-1 rounded-full inline-block ${getDecisionColor(
+              className={`text-xs font-bold px-3 py-1 rounded-full border inline-block mt-1 ${getDecisionColor(
                 latestFeedback?.decision,
               )}`}
             >
               {latestFeedback?.decision
-                ? latestFeedback.decision.charAt(0).toUpperCase() +
-                  latestFeedback.decision.slice(1)
-                : "Pending"}
+                ? latestFeedback.decision.toUpperCase()
+                : "PENDING"}
             </p>
           </div>
         </div>
 
-        {(isApproved || isApprovedByFeedback) &&
+        {/* {(isApproved || isApprovedByFeedback) &&
           (latestFeedback?.score || latestFeedback?.score === 0) && (
             <div className="mt-4">
               <p className="text-xs text-gray-500 mb-2">Score</p>
@@ -772,7 +755,7 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
                 );
               })()}
             </div>
-          )}
+          )} */}
       </div>
 
       {getDaysLeft(selectedChapter?.due_date) > 0 && !hideSubmissionFields && (
@@ -794,9 +777,9 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
             </div> */}
 
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">
+              <h3 className="text-sm font-semibold text-muted-foreground mb-4">
                 Submitting for:{" "}
-                <span className="text-blue-900 font-semibold">{`Chapter ${selectedChapter.chapter?.custom_title} - ${selectedChapter.chapter?.custom_description}`}</span>
+                <span className="text-primary font-bold">{`Chapter ${selectedChapter.chapter?.custom_title} - ${selectedChapter.chapter?.custom_description}`}</span>
               </h3>
             </div>
 
@@ -827,8 +810,8 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
             {chapterSubData?.files &&
               Array.isArray(chapterSubData.files) &&
               chapterSubData.files.length > 0 && (
-                <div className="mt-6 rounded-lg">
-                  <p className="text-sm text-gray-800">Saved Documents</p>
+                <div className="mt-6 rounded-lg bg-muted/20 p-4 border border-border">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Saved Documents</p>
                   <div className="space-y-2">
                     {chapterSubData.files.map((file: any, index: number) => (
                       <div
@@ -840,28 +823,28 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
                           target="_blank"
                           rel="noopener noreferrer"
                           download={true}
-                          className="w-full "
+                          className="w-full"
                         >
-                          <div className="w-fit flex rounded-lg text-blue-900 font-medium items-center hover:underline cursor-pointer">
+                          <div className="w-fit flex rounded-lg text-primary font-bold items-center hover:underline cursor-pointer group/link">
                             {getFileIcon(getFileNameFromURL(file?.file))}
-                            <p className="text-sm">
+                            <p className="text-sm group-hover/link:text-primary transition-colors">
                               {getFileNameFromURL(file?.file)}
                             </p>
                           </div>
                         </a>
                         <button
-                          className="cursor-pointer "
+                          className="p-1.5 rounded-md hover:bg-destructive/10 transition-colors"
                           onClick={() => {
                             mutateFileDelete(file.id);
                           }}
                           disabled={deleting}
                         >
                           {deleting ? (
-                            <Loader2 size={15} className="animate-spin" />
+                            <Loader2 size={14} className="animate-spin text-muted-foreground" />
                           ) : (
                             <Trash
-                              size={15}
-                              className="text-red-600 hover:text-red-400 cursor-pointer"
+                              size={14}
+                              className="text-destructive cursor-pointer"
                             />
                           )}
                         </button>
@@ -916,16 +899,17 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
       <div>
         {getDaysLeft(selectedChapter?.due_date) < 1 &&
           !hideSubmissionFields && (
-            <p className="text-sm text-red-500 mt-1 text-center font-medium">
+            <p className="text-sm text-destructive mt-1 text-center font-semibold italic">
               The due date for this chapter has passed. You can no longer submit
               or resubmit documents for this chapter.
             </p>
           )}
 
         {selectedChapter && previousSubmission && hideSubmissionFields && (
-          <div className="mt-6 p-4 border border-green-200 rounded-2xl bg-green-50 text-center">
-            <Check className="mx-auto mb-2 text-green-600" />
-            <p className="text-sm text-green-600 mt-1 text-center font-medium">
+          <div className="mt-8 p-6 border border-green-500/30 rounded-2xl bg-green-500/5 text-center shadow-sm">
+            <Check className="mx-auto mb-3 text-green-500 w-10 h-10 p-2 bg-green-500/10 rounded-full" />
+            <p className="text-sm text-green-500 font-bold uppercase tracking-wide">Approved</p>
+            <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
               This chapter has been approved by your supervisor. No further
               submissions are allowed.
             </p>
@@ -934,24 +918,24 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
       </div>
 
       {previousSubmission && (
-        <div className="mt-8 p-4 border border-gray-200 rounded-2xl bg-white shadow-md">
-          <div className="mb-4 border-b border-gray-300 pb-2">
-            <h3 className="text-lg font-semibold text-gray-600">
+        <div className="mt-8 p-6 border border-border rounded-2xl bg-card shadow-sm">
+          <div className="mb-6 border-b border-border pb-4">
+            <h3 className="text-lg font-bold text-foreground">
               {previousSubmission.status === "draft"
                 ? "Draft"
                 : "Previous Submission"}
             </h3>
           </div>
           <div>
-            <p className="flex items-center gap-1 mt-2 text-sm text-gray-600 whitespace-pre-wrap">
-              <Calendar size={15} className="mb-1 text-gray-500" />
+            <p className="flex items-center gap-2 mt-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <Calendar size={14} className="text-primary/70" />
               {formatDate(previousSubmission.created_at)}
             </p>
           </div>
 
           <div>
             <div
-              className="min-h-40 mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg"
+              className="min-h-40 mt-6 p-5 bg-muted/30 border border-border rounded-xl text-foreground leading-relaxed overflow-x-auto"
               dangerouslySetInnerHTML={{ __html: previousSubmission.content }}
             />
           </div>
@@ -959,8 +943,8 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
           {previousSubmission.files &&
             Array.isArray(previousSubmission.files) &&
             previousSubmission.files.length > 0 && (
-              <div className="mt-6 rounded-lg">
-                <p className="text-sm text-gray-800 mb-2">Documents</p>
+              <div className="mt-8 rounded-xl bg-muted/20 p-4 border border-border">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">Documents</p>
                 <div className="space-y-2">
                   {previousSubmission.files.map((file: any, index: number) => (
                     <a
@@ -969,11 +953,11 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       download={true}
-                      className="w-fit"
+                      className="w-fit block"
                     >
-                      <div className="w-fit flex bg-white mt-2 p-1 text-blue-900 font-medium items-center cursor-pointer hover:underline">
+                      <div className="w-fit flex bg-card border border-border rounded-lg px-3 py-2 text-primary font-bold items-center cursor-pointer hover:bg-muted transition-colors shadow-sm group/prevfile">
                         {getFileIcon(getFileNameFromURL(file?.file))}
-                        <p className="text-sm">
+                        <p className="text-sm group-hover/prevfile:underline">
                           {getFileNameFromURL(file?.file)}
                         </p>
                       </div>
@@ -992,39 +976,40 @@ const SubmitChapter = ({ selectedChapter }: SubmitChapterProps) => {
       )}
 
       {ChapterSubmissionFeedback && ChapterSubmissionFeedback.length > 0 && (
-        <div className="mt-8 p-4 border border-gray-200 rounded-2xl bg-white shadow-md">
-          <div className="mb-4 border-b border-gray-300 pb-2">
-            <h3 className="text-lg font-semibold text-gray-600">
+        <div className="mt-10 p-6 border border-border rounded-2xl bg-card shadow-lg">
+          <div className="mb-6 border-b border-border pb-4">
+            <h3 className="text-lg font-bold text-foreground">
               Supervisor Feedback
             </h3>
           </div>
           {ChapterSubmissionFeedback.map((feedback) => (
             <div
               key={feedback.id}
-              className="mb-6 last:mb-0 p-4 bg-gray-50 border border-gray-200 rounded-lg"
+              className="mb-8 last:mb-0 p-6 bg-muted/20 border border-border rounded-xl"
             >
-              <p className="flex items-center gap-1 mt-2 text-sm text-gray-600 whitespace-pre-wrap">
-                <Calendar size={15} className="mb-1 text-gray-500" />
+              <p className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <Calendar size={14} className="text-primary/70" />
                 {formatDate(feedback.created_at)}
               </p>
               <div
-                className="mt-4 text-sm text-gray-700 whitespace-pre-wrap"
+                className="mt-6 text-sm text-foreground leading-relaxed whitespace-pre-wrap"
                 dangerouslySetInnerHTML={{ __html: feedback.feedback_text }}
               />
               {feedback.file_attachment && (
-                <div className="mt-4 rounded-lg">
+                <div className="mt-8 rounded-xl bg-card p-4 border border-border shadow-sm">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">Response Document</p>
                   <a
                     href={`https://thesisflow.sbuildsolutions.org${feedback.file_attachment}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     download={true}
-                    className="w-fit"
+                    className="w-fit block"
                   >
-                    <div className="w-fit flex bg-white mt-2 p-1 text-blue-900 font-medium items-center cursor-pointer hover:underline">
+                    <div className="w-fit flex bg-muted border border-border rounded-lg px-3 py-2 text-primary font-bold items-center cursor-pointer hover:bg-muted/80 transition-colors shadow-sm group/fbfile">
                       {getFileIcon(
                         getFileNameFromURL(feedback.file_attachment),
                       )}
-                      <p className="text-sm">
+                      <p className="text-sm group-hover/fbfile:underline">
                         {getFileNameFromURL(feedback.file_attachment)}
                       </p>
                     </div>

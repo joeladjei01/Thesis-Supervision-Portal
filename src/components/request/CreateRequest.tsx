@@ -39,7 +39,7 @@ const CreateRequest = ({ onClose }: { onClose: () => void }) => {
 
   const fetchSupervisors = async (): Promise<Supervisor[]> => {
     try {
-      const { data }: any = await axios.get("/department/all-supervisors/");
+      const { data }: any = await axios.get(`/supervisors/supervisor/department/${person.department}/`);
       return data.data;
     } catch (error) {
       toast.error("Error fetching supervisors");
@@ -101,9 +101,9 @@ const CreateRequest = ({ onClose }: { onClose: () => void }) => {
           label="Request Title"
           name="proposed_topic"
           type="text"
-          placeholder="Enter Request Title"
+          placeholder="What is this request about?"
           formik={formik}
-          className="dark:bg-secondary/5 dark:border-border dark:text-gray-200"
+          className="dark:bg-muted/30 dark:border-border"
         />
 
         <div className="space-y-2">
@@ -114,13 +114,13 @@ const CreateRequest = ({ onClose }: { onClose: () => void }) => {
             onChange={(selectedOption) => {
               formik.setFieldValue(
                 "recipient",
-                selectedOption ? selectedOption.value : "",
+                selectedOption ,
               );
             }}
             isLoading={fetchingSupervisors}
           />
           {formik.touched.recipient && formik.errors.recipient && (
-            <div className="text-red-500 text-xs font-semibold mt-1 animate-pulse">
+            <div className="text-destructive text-[10px] font-bold uppercase tracking-wider mt-1.5 ml-1 italic">
               {formik.errors.recipient}
             </div>
           )}
@@ -140,12 +140,12 @@ const CreateRequest = ({ onClose }: { onClose: () => void }) => {
               onChange={(selectedOption) => {
                 formik.setFieldValue(
                   "supervisor",
-                  selectedOption ? selectedOption.value : "",
+                  selectedOption,
                 );
               }}
             />
             {formik.touched.supervisor && formik.errors.supervisor && (
-              <div className="text-red-500 text-xs font-semibold mt-1 animate-pulse">
+              <div className="text-destructive text-[10px] font-bold uppercase tracking-wider mt-1.5 ml-1 italic">
                 {formik.errors.supervisor}
               </div>
             )}
@@ -160,28 +160,28 @@ const CreateRequest = ({ onClose }: { onClose: () => void }) => {
           />
 
           {formik.touched.details && formik.errors.details && (
-            <div className="text-red-500 text-xs font-semibold mt-1 animate-pulse">
+            <div className="text-destructive text-[10px] font-bold uppercase tracking-wider mt-1.5 ml-1 italic">
               {formik.errors.details}
             </div>
           )}
         </div>
 
-        <div className="flex gap-4 justify-end mt-8 pt-6 border-t dark:border-border">
+        <div className="flex gap-4 justify-end mt-10 pt-6 border-t border-border">
           <OutlineButton 
-            title="Cancel" 
+            title="Discard" 
             onClick={onClose}
-            className="dark:border-border dark:text-gray-300 dark:hover:bg-secondary/10" 
+            className="hover:bg-muted transition-colors" 
           />
           <SolidButton
             Icon={
               formik.isSubmitting ? (
-                <Loader2 className="animate-spin mr-2" size={16} />
+                <Loader2 className="animate-spin" size={16} />
               ) : null
             }
             disabled={!(formik.isValid || formik.isSubmitting) || !formik.dirty}
-            title="Submit Request"
+            title={formik.isSubmitting ? "Submitting..." : "Send Request"}
             type="submit"
-            className="bg-blue-900 hover:bg-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 disabled:bg-gray-300 dark:disabled:bg-secondary/20"
+            className="px-8 shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300"
           />
         </div>
       </form>

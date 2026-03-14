@@ -28,43 +28,43 @@ const AllSubmissions: React.FC<AllSubmissionsProps> = ({
     navigate(`/submissions/chapter/${chapter.id}`);
   };
 
-  const submittedSubmission = (chapter) => {
+  const submittedSubmission = (chapter: any) : any => {
     return submissions?.filter(
       (sub) => sub.chapter_assignment.id === chapter?.id,
     );
   };
 
-  const getStatusBadge = (feedbackChapter, chapter) => {
+  const getStatusBadge = (feedbackChapter: any, chapter: any) => {
     const baseClasses =
-      "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium";
+      "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border";
 
     const isSubmitted = submittedSubmission(chapter);
-    const isDraft = isSubmitted.find((sub) => sub.status === "draft");
-    const isApproved = isSubmitted.find((sub) => sub.approved === true);
+    const isDraft = isSubmitted.find((sub: any) => sub.status === "draft");
+    const isApproved = isSubmitted.find((sub: any) => sub.approved === true);
 
     if (feedbackChapter?.decision == "approved" || isApproved) {
-      return `${baseClasses} bg-green-100 text-green-800`;
+      return `${baseClasses} bg-green-500/10 text-green-500 border-green-500/20`;
     } else if (feedbackChapter?.decision === "reject") {
-      return `${baseClasses} bg-red-100 text-red-800`;
+      return `${baseClasses} bg-red-500/10 text-red-500 border-red-500/20`;
     } else if (feedbackChapter?.decision === "revise" && isDraft) {
-      return `${baseClasses} bg-yellow-100 text-yellow-800`;
+      return `${baseClasses} bg-yellow-500/10 text-yellow-500 border-yellow-500/20`;
     } else {
       if (isDraft) {
-        return `${baseClasses}  bg-gray-100 text-gray-800`;
+        return `${baseClasses} bg-muted text-muted-foreground border-border`;
       } else if (isSubmitted.length > 0) {
-        return `${baseClasses} bg-blue-100 text-blue-800`;
+        return `${baseClasses} bg-primary/10 text-primary dark:text-gray-400 border-primary/20 dark:border-gray-400`;
       } else if (getDaysLeft(chapter.due_date) <= 0) {
-        return `${baseClasses}  text-red-600 italic font-medium`;
+        return `${baseClasses} text-destructive italic font-medium border-transparent bg-destructive/5`;
       }
-      return `${baseClasses} bg-gray-100 text-gray-800`;
+      return `${baseClasses} bg-muted text-muted-foreground border-border`;
     }
   };
 
-  const getStatusText = (feedbackChapter, chapter) => {
+  const getStatusText = (feedbackChapter: any, chapter: any) => {
     // console.log("Chapter", chapter);
     const isSubmitted = submittedSubmission(chapter);
-    const isDraft = isSubmitted.find((sub) => sub.status === "draft");
-    const isApproved = isSubmitted.find((sub) => sub.approved === true);
+    const isDraft = isSubmitted.find((sub: any) => sub.status === "draft");
+    const isApproved = isSubmitted.find((sub: any) => sub.approved === true);
 
     if (feedbackChapter?.decision == "approved" || isApproved) {
       return "Approved";
@@ -88,7 +88,7 @@ const AllSubmissions: React.FC<AllSubmissionsProps> = ({
     }
   };
 
-  const completedSubmission = (chapter) => {
+  const completedSubmission = (chapter: any) => {
     const comp: ChapterSubmissionFeedback = feedbacks?.find(
       (f) => f.chapter.chapter_assignment.id == chapter?.id,
     );
@@ -96,51 +96,51 @@ const AllSubmissions: React.FC<AllSubmissionsProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 w-full">
-      <h2 className="text-lg font-cal-sans tracking-wide text-gray-500 mb-4">
+    <div className="bg-card rounded-2xl shadow-sm border border-border p-6 w-full">
+      <h2 className="text-lg font-bold text-foreground mb-6">
         All Submissions
       </h2>
 
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-left py-3 px-0 font-medium text-gray-600">
+            <tr className="border-b border-border">
+              <th className="text-left py-3 px-0 font-semibold text-muted-foreground uppercase tracking-wider text-xs">
                 Chapters
               </th>
-              <th className="text-left py-3 px-7 font-medium text-gray-600">
+              <th className="text-left py-3 px-7 font-semibold text-muted-foreground uppercase tracking-wider text-xs">
                 Due Date
               </th>
-              <th className="text-left py-3 px-4 font-medium text-gray-600">
+              <th className="text-left py-3 px-4 font-semibold text-muted-foreground uppercase tracking-wider text-xs">
                 Days Until Due date
               </th>
-              <th className="text-left py-3 px-4 font-medium text-gray-600">
+              <th className="text-left py-3 px-4 font-semibold text-muted-foreground uppercase tracking-wider text-xs">
                 Status
               </th>
             </tr>
           </thead>
           <tbody>
-            {chapters?.map((chapter, index) => (
+            {chapters?.map((chapter: any, index: number) => (
               <tr
                 key={chapter.id}
                 onClick={() => handleChapterSelect(chapter)}
                 className={`${index !== submissions?.length - 1
-                    ? "border-b border-gray-100"
+                    ? "border-b border-border/50"
                     : ""
-                  } hover:bg-blue-50/50 cursor-pointer rounded-md`}
+                  } hover:bg-muted/50 cursor-pointer transition-colors duration-200`}
               >
                 <td className="py-4 px-2">
-                  <span className="text-blue-800 text-sm font-medium">{`${chapter.chapter?.custom_title} - ${chapter.chapter?.custom_description}`}</span>
+                  <span className="text-foreground text-sm font-semibold group-hover:text-primary transition-colors">{`${chapter.chapter?.custom_title} - ${chapter.chapter?.custom_description}`}</span>
                 </td>
-                <td className="py-4 px-2 text-sm text-gray-700">
+                <td className="py-4 px-2 text-sm text-muted-foreground">
                   {formatDate(chapter.due_date)}
                 </td>
                 <td
-                  className={`"py-4 px-4 text-sm text-gray-700 text-center font-semibold  `}
+                  className={`py-4 px-4 text-sm text-muted-foreground text-center font-semibold`}
                 >
                   <p
                     className={`${getDaysLeft(chapter.due_date) < 0 &&
-                      " italic font-medium text-red-600"
+                      "italic font-medium text-destructive"
                       }`}
                   >
                     {getDaysLeft(chapter.due_date)}
@@ -157,8 +157,8 @@ const AllSubmissions: React.FC<AllSubmissionsProps> = ({
                   </span>
 
                   {submittedSubmission(chapter).find(
-                    (sub) => sub.status === "draft",
-                  ) && <div className="size-3 bg-slate-500 rounded-full" />}
+                    (sub: any) => sub.status === "draft",
+                  ) && <div className="size-2 bg-muted-foreground/30 rounded-full" />}
                 </td>
               </tr>
             ))}

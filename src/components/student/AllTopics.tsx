@@ -27,39 +27,39 @@ const AllTopics: React.FC<AllTopicsProps> = ({
   onViewDetails,
 }) => {
   return (
-    <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-md border-2 border-gray-200 p-6 mt-6">
-      <h1 className="text-lg font-cal-sans tracking-wide text-gray-500 mb-4">
+    <div className="max-w-6xl mx-auto bg-card rounded-2xl shadow-sm border border-border p-6 mt-6">
+      <h1 className="text-lg font-bold text-foreground mb-6">
         Topics Proposals
       </h1>
 
-      <div className="overflow-x-auto rounded-2xl border-gray-200 border">
-        <table className="min-w-full bg-white ">
+      <div className="overflow-x-auto rounded-xl border border-border">
+        <table className="min-w-full bg-card">
           <thead>
-            <tr className="border-b border-gray-200 bg-blue-50">
-              <th className="px-4 py-4 text-left text-sm font-medium text-gray-600 ">
+            <tr className="border-b border-border bg-muted/50">
+              <th className="px-4 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Title
               </th>
-              <th className="px-4 py-2 text-center text-sm font-medium text-gray-600 ">
+              <th className="px-4 py-2 text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-4 py-2 pr-7 text-right text-sm font-medium text-gray-600 ">
+              <th className="px-4 py-2 pr-7 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
             {topics.map((topic) => (
-              <tr key={topic.id} className="hover:bg-gray-50">
-                <td className="px-4 py-5 text-sm text-gray-800">
+              <tr key={topic.id} className="border-b border-border/50 hover:bg-muted/50 transition-colors duration-200 last:border-0">
+                <td className="px-4 py-5 text-sm text-foreground font-medium">
                   {shortenText(topic.title, 50)}
                 </td>
                 <td
-                  className={`px-4 py-2 text-sm text-center font-medium ${
+                  className={`px-4 py-2 text-sm text-center font-bold ${
                     topic.status === "approved"
-                      ? "text-green-700"
+                      ? "text-green-500"
                       : topic.status === "pending"
-                        ? "text-yellow-700"
-                        : "text-red-700"
+                        ? "text-yellow-500"
+                        : "text-destructive"
                   }`}
                 >
                   {topic.status.charAt(0).toUpperCase() + topic.status.slice(1)}
@@ -77,7 +77,7 @@ const AllTopics: React.FC<AllTopicsProps> = ({
                     title={"Update"}
                     className={"py-1 px-2 w-fit ml-2"}
                     onClick={() => {
-                      onUpadteClick(topic);
+                      onUpadteClick?.(topic);
                     }}
                     disabled={topic.status === "pending" ? false : true}
                   />

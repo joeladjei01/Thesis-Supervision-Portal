@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutation, useQuery } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import React from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Header from "../../components/shared/text/Header";
 import usePageTile from "../../hooks/usePageTitle";
@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 import SolidButton from "../../components/shared/buttons/SolidButton";
 import {
   formatDate,
-  getChaperById,
   getFileNameFromURL,
 } from "../../utils/helpers";
 import Loading from "../../components/shared/loader/Loading";
@@ -61,7 +60,7 @@ const SupervisorFeedbacks: React.FC = () => {
     }
   };
 
-  const { mutate, isPending: loading } = useMutation({
+  const { isPending: loading } = useMutation({
     mutationFn: fetchFeedbacks,
   });
 
@@ -70,24 +69,25 @@ const SupervisorFeedbacks: React.FC = () => {
   // }, [])
 
   const getStatusButton = (status: string) => {
+    const baseClasses = "px-4 py-1 rounded-full text-xs font-bold border transition-colors";
     switch (status) {
       case "revise":
         return (
-          <button className="bg-yellow-300 text-yellow-900 px-4 py-1 rounded-md text-xs font-medium hover:bg-yellow-200">
-            Revise and Resubmit
-          </button>
+          <span className={`${baseClasses} bg-yellow-500/10 text-yellow-500 border-yellow-500/20`}>
+            REVISE AND RESUBMIT
+          </span>
         );
       case "approved":
         return (
-          <button className="bg-green-300 text-green-900 px-4 py-1 rounded-md text-xs font-medium hover:bg-green-200">
-            Approved
-          </button>
+          <span className={`${baseClasses} bg-green-500/10 text-green-500 border-green-500/20`}>
+            APPROVED
+          </span>
         );
       case "reject":
         return (
-          <button className="bg-red-300 text-red-900 px-4 py-1 rounded-md text-xs font-medium hover:bg-red-200">
-            Reject
-          </button>
+          <span className={`${baseClasses} bg-destructive/10 text-destructive border-destructive/20`}>
+            REJECTED
+          </span>
         );
       default:
         return null;
@@ -105,11 +105,11 @@ const SupervisorFeedbacks: React.FC = () => {
         <Header title="Feedbacks" subtitle="View feedback from supervisor" />
 
         {feedbacks?.length == 0 && !loading && (
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-            <div className="flex">
-              <div className="flex-shrink-0">
+          <div className="bg-primary/5 border-l-4 border-primary p-5 rounded-r-xl mb-8 shadow-sm">
+            <div className="flex items-center">
+              <div className="shrink-0">
                 <svg
-                  className="h-5 w-5 text-blue-400"
+                    className="h-6 w-6 text-primary"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -122,9 +122,9 @@ const SupervisorFeedbacks: React.FC = () => {
                   />
                 </svg>
               </div>
-              <div className="ml-3">
-                <p className="text-sm text-blue-700">
-                  Note: Feedback is provided for specific chapters only after
+              <div className="ml-4">
+                <p className="text-sm font-medium text-foreground">
+                  Feedback is provided for specific chapters only after
                   submission and review by your supervisor.
                 </p>
               </div>
@@ -141,20 +141,20 @@ const SupervisorFeedbacks: React.FC = () => {
           {feedbacks?.map((feedback) => (
             <div
               key={feedback.id}
-              className=" bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden"
+              className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden group hover:shadow-md transition-all duration-300"
             >
-              <h2 className="text-md w-full bg-sky-600/7 p-3 font-montserrat font-bold text-blue-900">
+              <h2 className="text-sm w-full bg-muted/50 p-4 font-bold text-foreground border-b border-border flex items-center gap-2">
                 <MdFeedback
                   size={18}
-                  className="inline-flex text-sky-700 mb-1 mr-1.5"
+                  className="text-primary"
                 />
-                Chapter feedback
+                Chapter Feedback
               </h2>
 
-              <div className="relative p-3">
+              <div className="relative p-6">
                 {/* Chapter Header */}
-                <div className="mb-2 ">
-                  <h3 className="text-lg font-medium text-gray-600 mb-1">
+                <div className="mb-6 ">
+                  <h3 className="text-xl font-bold text-foreground mb-1">
                     Chapter{" "}
                     {feedback.chapter.chapter_assignment.chapter.custom_title} -{" "}
                     {
@@ -162,49 +162,53 @@ const SupervisorFeedbacks: React.FC = () => {
                         .custom_description
                     }
                   </h3>
-                  <p className="text-sm text-gray-500 font-montserrat">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     Submission: {feedback.chapter.title}
                   </p>
                 </div>
 
                 {/* Feedback Content */}
-                <div className=" rounded-lg p-2 mb-3">
-                  <div className="mb-3">
-                    <h4 className="font-semibold text-sky-900 mb-1">
-                      Feedback from {feedback.chapter.supervisor.name}
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      Received on {formatDate(feedback.created_at)} {}
-                    </p>
+                <div className="rounded-xl mb-6">
+                  <div className="mb-4 flex items-center justify-between">
+                    <div>
+                        <h4 className="font-bold text-foreground mb-1">
+                        Feedback from {feedback.chapter.supervisor.name}
+                        </h4>
+                        <p className="text-xs font-medium text-muted-foreground">
+                        Received on {formatDate(feedback.created_at)}
+                        </p>
+                    </div>
                   </div>
 
-                  <div className=" sm:hidden my-2 text-sm ">
-                    Decision - {getStatusButton(feedback.decision)}
+                  <div className="sm:hidden mb-4 p-3 bg-muted/50 rounded-lg border border-border">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-2">Decision</span>
+                    {getStatusButton(feedback.decision)}
                   </div>
 
                   <div
-                    className="text-gray-700 bg-gray-50 border border-gray-200 p-2 rounded min-h-40 leading-relaxed"
+                    className="text-foreground bg-muted/30 border border-border p-5 rounded-xl min-h-40 leading-relaxed shadow-inner"
                     dangerouslySetInnerHTML={{ __html: feedback.feedback_text }}
                   />
                 </div>
 
                 {/* Status */}
-                <div className="absolute hidden sm:block text-sm top-5 right-5">
-                  Decision - {getStatusButton(feedback.decision)}
+                <div className="absolute hidden sm:flex flex-col items-end text-sm top-6 right-6">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Decision</span>
+                  {getStatusButton(feedback.decision)}
                 </div>
 
                 {feedback.file_attachment && (
-                  <div className="mb-4">
-                    <h4 className="font-semibold text-sm text-sky-900 mb-1">
+                  <div className="mb-6 p-4 bg-muted/20 border border-border rounded-xl">
+                    <h4 className="font-bold text-xs text-muted-foreground uppercase tracking-wider mb-3">
                       Attachment:
                     </h4>
                     <a
                       href={`https://thesisflow.sbuildsolutions.org${feedback.file_attachment}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-sm text-blue-600 hover:underline"
+                      className="inline-flex items-center text-sm text-primary font-bold hover:underline group/file"
                     >
-                      <File className="mr-1" />
+                      <File className="mr-2 w-4 h-4 group-hover:scale-110 transition-transform" />
                       {getFileNameFromURL(feedback.file_attachment)}
                     </a>
                   </div>
@@ -229,10 +233,10 @@ const SupervisorFeedbacks: React.FC = () => {
 
         {/* Empty State (if no feedbacks) */}
         {feedbacks?.length === 0 && !loading && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <div className="text-gray-400 mb-4">
+          <div className="bg-card rounded-2xl shadow-sm border border-border p-16 text-center">
+            <div className="bg-muted w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg
-                className="w-12 h-12 mx-auto"
+                className="w-10 h-10 text-muted-foreground"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -245,11 +249,11 @@ const SupervisorFeedbacks: React.FC = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-xl font-bold text-foreground mb-3">
               No feedback available
             </h3>
-            <p className="text-gray-500">
-              You haven't received any feedback from your supervisors yet.
+            <p className="text-muted-foreground max-w-sm mx-auto">
+              You haven't received any feedback from your supervisors yet. Feedback appears here after review.
             </p>
           </div>
         )}

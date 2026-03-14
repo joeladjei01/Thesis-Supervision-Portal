@@ -1,15 +1,10 @@
-import { useState, type ReactNode } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router";
+import { type ReactNode } from "react";
+import { Navigate, useLocation } from "react-router";
 import userStore from "../../../store";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import Loading from "../../../components/shared/loader/Loading";
-import { handleLogout } from "../../../utils/utils";
 import toast from "react-hot-toast";
-import { useDepartmentDataStore } from "../../../store/useDepartmentDataStore";
-import { useStudentDataStore } from "../../../store/useStudentDataStore";
-import { useSupervisorDataStore } from "../../../store/useSupervisorDataStore";
-import useRequestStore from "../../../store/useRequestStore";
 
 function Protected({
   children,
@@ -17,45 +12,10 @@ function Protected({
   children: ReactNode;
   allowRoles: string[];
 }) {
-  const { reset, isLogin, userInfo, person, refreshToken } = userStore();
-  const [loading, setLoading] = useState(false);
+  const { reset, isLogin, userInfo, person, } = userStore();
   const location = useLocation();
-  const navigate = useNavigate();
   const axios = useAxiosPrivate();
-  const setAllRequests = useRequestStore((state) => state.setAllRequests);
-  const { reset: resetDepartment } = useDepartmentDataStore();
-  const { reset: resetStudent } = useStudentDataStore();
-  const { reset: resetSupervisor } = useSupervisorDataStore();
 
-  const { mutateAsync: logout } = useMutation({
-    mutationFn: async () => {
-      try {
-        setLoading(true);
-        await handleLogout(
-          navigate,
-          userInfo,
-          refreshToken,
-          reset,
-          resetDepartment,
-          resetStudent,
-          resetSupervisor,
-          setAllRequests,
-        );
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("An Error Occuied");
-    },
-    onSuccess: () => {
-      navigate("/auth/login", { replace: true });
-      toast.success("Logout successful!");
-    },
-  });
 
   const { data: validUser, isLoading } = useQuery({
     queryKey: ["userInfo"],
@@ -69,7 +29,7 @@ function Protected({
         ID = person?.student.id;
         url = `/students/retrieve/${ID}/`;
       } else if (userInfo?.role === import.meta.env.VITE_SUPERVISOR_ROLE) {
-        ID = person?.supervisor.id;
+        ID = person?.id;
         url = `/supervisors/supervisor/retrieve/${ID}/`;
       } else {
         ID = person?.id;
@@ -81,12 +41,16 @@ function Protected({
         //   return;
         // }
         const response = await axios.get(`${url}`);
-        return true;
+        if( response.status === 200)  {return true } else{ throw new Error("Invalid user")}
       } catch (error) {
         console.error("Error fetching user info:", error);
+        toast.error("Invalid user")
+    reset(); // Reset user state in the store
+    localStorage.removeItem("user-store");
         return false;
       }
     },
+    refetchOnWindowFocus: false,
   });
 
   if (isLoading) {

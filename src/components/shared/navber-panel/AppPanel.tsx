@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {
   Dialog,
   DialogBackdrop,
@@ -11,23 +11,19 @@ import {
 } from "lucide-react";
 import logo from "../../../assets/UG_LOGO_FULL.png";
 import { NavLink, useNavigate } from "react-router";
-// import { useState } from "react";
 import userStore from "../../../store/index";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import useRequestStore from "../../../store/useRequestStore";
-import { AiFillFolder, AiFillIeCircle, AiOutlineUsergroupAdd } from "react-icons/ai";
+import { AiFillFolder, AiOutlineUsergroupAdd } from "react-icons/ai";
 import { useDepartmentDataStore } from "../../../store/useDepartmentDataStore";
 import { useStudentDataStore } from "../../../store/useStudentDataStore";
 import { useSupervisorDataStore } from "../../../store/useSupervisorDataStore";
 import { handleLogout } from "../../../utils/utils";
 import { 
   FaArrowLeft, 
-  FaCalendar, 
   FaClipboardList, 
-  FaComments, 
   FaHome, 
   FaInbox, 
   FaUserPlus, 
@@ -43,8 +39,8 @@ import {
   FaFileSignature,
   FaChartBar,
 } from "react-icons/fa";
-import { FaGear, FaMessage, FaSliders, FaUserCheck } from "react-icons/fa6";
-import { MdOutlineDocumentScanner, MdRateReview } from "react-icons/md";
+import { FaGear, FaMessage,  FaUserCheck } from "react-icons/fa6";
+import { MdOutlineDocumentScanner } from "react-icons/md";
 import { HiCollection } from "react-icons/hi";
 
 function classNames(...classes: string[]) {
@@ -71,9 +67,6 @@ const AppPanel = ({
   const { reset: resetStudent } = useStudentDataStore();
   const { reset: resetSupervisor } = useSupervisorDataStore();
 
-  const ADMIN = import.meta.env.VITE_ADMIN_ROLE;
-  const SUPERVISOR = import.meta.env.VITE_SUPERVISOR_ROLE;
-  const STUDENT = import.meta.env.VITE_STUDENT_ROLE;
 
   const navigation =
     //Admin
@@ -273,42 +266,6 @@ const AppPanel = ({
               },
             ]
             : [];
-
-  const axiosPrivate = useAxiosPrivate();
-
-  // const handleLogout = async () => {
-  //   setLoading(true);
-  //   try {
-  //     await axiosPrivate.post("/accounts/auth/sign-out/", {
-  //       refresh: refreshToken,
-  //       email: userInfo.email,
-  //     });
-
-  //     navigate("/auth/login", { replace: true });
-  //     userInfo.role === STUDENT && resetStudent();
-  //     userInfo.role === SUPERVISOR && resetSupervisor();
-  //     userInfo.role === ADMIN && resetDepartment();
-  //     setAllRequests([]);
-  //     reset(); // Reset user state in the store
-  //   } catch (error) {
-  //     console.log(error);
-  //     navigate("/auth/login", { replace: true });
-  //     reset();
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  //   // axiosPrivate
-  //   //     .post("/accounts/auth/sign-out/")
-  //   //     .then(() => {
-  //   //       navigate("/auth/login" , {replace : true})
-  //   //       reset(); // Reset user state in the store
-  //   //     })
-  //   //     .catch(() => {
-  //   //       navigate("/auth/login" , {replace : true})
-  //   //       reset();
-  //   //     });
-  //   // setLoading(false)
-  // };
 
   const { mutate } = useMutation({
     mutationFn: async () => {

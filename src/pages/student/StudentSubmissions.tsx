@@ -106,7 +106,7 @@ const MySubmissions: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background dark:bg-transparent text-foreground">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8 flex-wrap">
@@ -167,9 +167,9 @@ const MySubmissions: React.FC = () => {
               {/* Stats Cards */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 gap-y-7">
                 {StatArray.map((stat) => (
-                  <div className="relative bg-muted/20 dark:bg-muted/10 p-4 rounded-lg border-t-4 border border-primary text-center">
-                    <div className="absolute size-13 -top-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center bg-card rounded-full border border-primary">
-                      <stat.Icon size={25} className="mb-1 text-primary" />
+                  <div className="relative bg-muted/20 dark:bg-muted/10 p-4 rounded-lg border-t-4 border border-primary dark:border-gray-400 text-center">
+                    <div className="absolute size-13 -top-5 left-1/2 transform -translate-x-1/2 flex items-center justify-center bg-card rounded-full border border-primary dark:border-gray-400">
+                      <stat.Icon size={25} className="mb-1 text-primary dark:text-gray-400" />
                     </div>
 
                     <div className="mt-5.5">

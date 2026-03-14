@@ -11,6 +11,7 @@ import Header from "../../components/shared/text/Header";
 import NavTab from "../../components/shared/Tab/NavTab";
 import SolidButton from "../../components/shared/buttons/SolidButton";
 import RequestMeeting from "../../components/student/RequestMeeting";
+import Modal from "@/layouts/Modal";
 
 interface Meeting {
   id: string;
@@ -45,6 +46,7 @@ const StudentMeetings: React.FC = () => {
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [meetingPurpose, setMeetingPurpose] = useState<string>("");
   const [currentMonth, _setCurrentMonth] = useState("May");
+  const [displayModal, setDisplayModal] = useState(false)
   usePageTile("Student - Meetings")
 
   // Sample meetings data
@@ -134,14 +136,14 @@ const StudentMeetings: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     return status === "confirmed"
-      ? "bg-green-100 text-green-800 px-2 py-1 rounded text-xs"
-      : "bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs";
+      ? "bg-success/10 text-success px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-success/20"
+      : "bg-warning/10 text-warning px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-warning/20";
   };
 
   const getTypeBadge = (type: string) => {
     return type === "virtual"
-      ? "bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
-      : "bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs";
+      ? "bg-primary/10 text-primary px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-primary/20"
+      : "bg-purple-500/10 text-purple-500 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-purple-500/20";
   };
 
   // Calendar days for May 2025
@@ -161,53 +163,69 @@ const StudentMeetings: React.FC = () => {
     <div className="min-h-screen ">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 flex flex-col md:flex-row items-center justify-between">
           <Header title="Meetings" />
+
+          <SolidButton
+          title={"Request a meeting"}
+          onClick={()=> setDisplayModal(true)}
+          />
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className=" mb-8">
           {/* Your Meetings */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="rounded-2xl bg-card shadow-sm border border-border overflow-hidden">
 
-            <div className="p-6">
-              <Header title="Your Meetings" subtitle="Scheduled and past meetings with your supervisor" />
-
+            <div className="p-8">
+                <div className="mb-8">
+                <h2 className="text-xl font-bold text-foreground mb-1">
+                    Your Meetings
+                </h2>
+                <p className="text-muted-foreground text-sm font-medium">
+                    Scheduled and past meetings with your supervisor
+                </p>
+                </div>
               {/* Tabs */}
               <div className="mb-6">
                 <NavTab selectors={Tabs} activeTab={activeTab} onTabChange={setActiveTab} />
               </div>
 
               {/* Meetings List */}
-              <div className="space-y-4">
+              <div className="min-h-120 max-h-167 space-y-4 overflow-y-auto">
                 {(activeTab === "upcoming"
                   ? upcomingMeetings
                   : pastMeetings
                 ).map((meeting) => (
                   <div
                     key={meeting.id}
-                    className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
+                    className="flex items-center justify-between p-4 border border-border/50 rounded-xl bg-muted/20 hover:bg-muted/40 transition-colors group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-medium text-sm">
-                        {meeting.day}
+                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex flex-col items-center justify-center text-primary font-bold shrink-0 border border-primary/10 group-hover:scale-105 transition-transform">
+                        <span className="text-xs uppercase leading-none opacity-70 mb-0.5">{meeting.month}</span>
+                        <span className="text-lg leading-none">{meeting.day}</span>
                       </div>
                       <div>
-                        <h3 className="font-medium text-gray-900 text-sm">
+                        <h3 className="font-bold text-foreground text-[15px] mb-0.5">
                           {meeting.title}
                         </h3>
-                        <p className="text-gray-600 text-xs">
+                        <p className="text-muted-foreground text-xs font-semibold uppercase tracking-tight mb-2 opacity-80">
                           {meeting.supervisor}
                         </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Calendar className="w-3 h-3 text-gray-400" />
-                          <span className="text-xs text-gray-600">
-                            {meeting.date}
-                          </span>
-                          <Clock className="w-3 h-3 text-gray-400 ml-2" />
-                          <span className="text-xs text-gray-600">
-                            {meeting.time}
-                          </span>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-primary/60" />
+                            <span className="text-xs text-muted-foreground font-medium">
+                                {meeting.date}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-primary/60" />
+                            <span className="text-xs text-muted-foreground font-medium">
+                                {meeting.time}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -227,53 +245,45 @@ const StudentMeetings: React.FC = () => {
             </div>
           </div>
 
-          {/* Request a Meeting */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
-                Request a Meeting
-              </h2>
-              <p className="text-gray-600 text-sm mb-6">
-                Schedule time with your supervisor
-              </p>
-
-              <div>
-                <RequestMeeting />
-              </div>
-            </div>
-          </div>
+          
         </div>
 
         {/* Active Teams/Zoom Sessions */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6">
-            <div className="flex items-center gap-2 mb-6">
-              <Video className="w-5 h-5 text-gray-700" />
-              <h2 className="text-lg font-semibold text-gray-900">
-                Active Teams/Zoom Sessions
-              </h2>
+        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+          <div className="p-8">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 bg-primary/10 rounded-lg">
+                <Video className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-foreground">
+                    Active Teams/Zoom Sessions
+                </h2>
+                <p className="text-muted-foreground text-sm font-medium">Connect with your supervisor instantly</p>
+              </div>
             </div>
 
             <div className="space-y-4">
               {activeSessions.map((session) => (
                 <div
                   key={session.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                  className="flex items-center justify-between p-5 border border-border bg-muted/10 rounded-2xl hover:bg-muted/20 transition-all duration-300"
                 >
-                  <div>
-                    <h3 className="font-medium text-gray-900 mb-1">
+                  <div className="flex-1 mr-6">
+                    <h3 className="font-bold text-foreground text-base mb-1.5">
                       {session.title}
                     </h3>
-                    <p className="text-gray-600 text-sm mb-2">
+                    <p className="text-muted-foreground text-sm mb-4 font-medium leading-relaxed">
                       {session.description}
                     </p>
                     <div className="flex items-center gap-4">
-                      <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-primary bg-primary/10 px-2.5 py-1 rounded-md border border-primary/20">
                         {session.status === "started"
                           ? "Session started"
                           : "Session started 10 mins ago"}
                       </span>
-                      <span className="text-xs text-green-600">
+                      <span className="text-xs font-semibold text-success flex items-center gap-1.5">
+                        <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
                         {session.timeStarted}
                       </span>
                     </div>
@@ -290,6 +300,19 @@ const StudentMeetings: React.FC = () => {
           </div>
         </div>
       </div>
+      {
+        displayModal && 
+        <Modal
+        headTitle="Request a Meeting"
+        subHeadTitle="Schedule time with your supervisor"
+        buttonDisabled
+        handleConfirm={()=>{}}
+        handleCancel={()=>{setDisplayModal(false)}}
+        w="max-w-5xl"
+        >
+<RequestMeeting />
+        </Modal>
+      }
     </div>
   );
 };

@@ -110,19 +110,19 @@ const RequestTab = ({ requests }: Props) => {
   const selectedRequests = getSelectedRequest();
 
   return (
-    <div className="relative h-[80vh] bg-white dark:bg-card border-r dark:border-border transition-colors duration-300">
-      <div className="w-full flex items-center justify-center px-4 py-3 bg-slate-50 dark:bg-secondary/5 relative border-b dark:border-border">
+    <div className="relative h-[80vh] bg-card border-r border-border transition-colors duration-300">
+      <div className="w-full flex items-center justify-center px-4 py-4 bg-muted/30 relative border-b border-border">
         <button
           onClick={() => fetchReq()}
-          className=" mr-2 cursor-pointer text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+          className=" mr-2 cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
         >
           <RefreshCcw
-            size={17}
-            className={` ${refreshRequest ? "animate-spin" : " "}  mr-4'`}
+            size={16}
+            className={` ${refreshRequest ? "animate-spin" : " "}  mr-4`}
           />
         </button>
 
-        <h2 className="text-sm font-bold uppercase tracking-wider font-nunito-sans text-gray-500 dark:text-gray-400 py-1">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground py-1">
           {activeTab === "sup"
             ? "Supervisors"
             : activeTab === "cor"
@@ -135,15 +135,15 @@ const RequestTab = ({ requests }: Props) => {
       </div>
 
       {userInfo.role === isStudent && (
-        <div className="overflow-x-auto custom-scrollbar border-b dark:border-border">
-          <div className="flex items-center gap-4 px-4 bg-slate-50 dark:bg-card">
+        <div className="overflow-x-auto custom-scrollbar border-b border-border">
+          <div className="flex items-center gap-4 px-4 bg-muted/20">
             {tabs.map((tab) => (
               <div
                 key={tab.id}
-                className={`flex items-center gap-2 py-3 cursor-pointer transition-all duration-200 relative group ${
+                className={`flex items-center gap-2 py-4 cursor-pointer transition-all duration-200 relative group shrink-0 ${
                   activeTab === tab.id
-                    ? "text-blue-900 dark:text-blue-400"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
                 onClick={() => setActiveTab(tab.id)}
               >
@@ -152,7 +152,7 @@ const RequestTab = ({ requests }: Props) => {
                   {tab.title}
                 </span>
                 {activeTab === tab.id && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-900 dark:bg-blue-400" />
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
                 )}
               </div>
             ))}
@@ -161,18 +161,16 @@ const RequestTab = ({ requests }: Props) => {
       )}
 
       {selectedRequests.length === 0 ? (
-        <div className="h-full flex flex-col justify-center items-center gap-4 bg-gray-50/50 dark:bg-card/50">
-          <div className="h-24 w-24 bg-gray-100 dark:bg-secondary/10 rounded-full flex items-center justify-center">
-            <span className="text-4xl text-gray-400 dark:text-gray-500">
-              <MessageCircleQuestionIcon size={48} />
-            </span>
+        <div className="h-full flex flex-col justify-center items-center gap-4 bg-muted/10">
+          <div className="h-20 w-20 bg-muted rounded-full flex items-center justify-center shadow-inner">
+            <MessageCircleQuestionIcon size={32} className="text-muted-foreground" />
           </div>
-          <h3 className="text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest text-xs">
+          <h3 className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">
             No Requests Found
           </h3>
         </div>
       ) : (
-        <div className="h-full bg-white dark:bg-card overflow-y-auto custom-scrollbar">
+        <div className="h-full bg-card overflow-y-auto custom-scrollbar">
           {selectedRequests.map((request: any) => (
             <Card
               key={request.id}
@@ -200,9 +198,9 @@ const RequestTab = ({ requests }: Props) => {
         <div className="absolute bottom-8 right-6">
           <button
             onClick={() => setDisplayCreateModal(true)}
-            className="flex size-12 items-center cursor-pointer justify-center gap-2 bg-blue-900 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+            className="flex size-14 items-center cursor-pointer justify-center gap-2 bg-primary text-primary-foreground rounded-2xl shadow-xl hover:shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300"
           >
-            <PlusCircle size={24} />
+            <PlusCircle size={28} />
           </button>
         </div>
       )}
@@ -245,47 +243,47 @@ const Card = ({ id, name, status, date, onClick, activeTab }: CardProps) => {
   const getStatusStyles = () => {
     switch (status) {
       case "pending":
-        return "bg-yellow-400 dark:bg-yellow-500 text-white";
+        return "bg-yellow-500/20 text-yellow-500 border-yellow-500/20";
       case "approved":
-        return "bg-green-400 dark:bg-green-500 text-white";
+        return "bg-green-500/20 text-green-500 border-green-500/20";
       case "rejected":
-        return "bg-red-400 dark:bg-red-500 text-white";
+        return "bg-destructive/20 text-destructive border-destructive/20";
       default:
-        return "bg-blue-400 dark:bg-blue-500 text-white";
+        return "bg-primary/20 text-primary border-primary/20";
     }
   };
 
   return (
     <div
-      className={`flex items-center gap-3 text-gray-700 dark:text-gray-300 cursor-pointer p-4 transition-all duration-200 border-b dark:border-border/40 ${
+      className={`flex items-center gap-4 text-foreground cursor-pointer p-5 transition-all duration-300 border-b border-border/40 hover:bg-muted/30 ${
         selectedReq.id == id
-          ? "bg-blue-50/50 dark:bg-blue-900/10 text-blue-900 dark:text-blue-400 border-r-4 border-r-blue-900 dark:border-r-blue-500 shadow-inner"
-          : "bg-transparent hover:bg-gray-50 dark:hover:bg-secondary/5"
+          ? "bg-primary/5 border-l-4 border-l-primary shadow-sm"
+          : "bg-transparent"
       }`}
       onClick={onClick}
     >
-      <div className="relative h-12 w-12 flex items-center justify-center bg-blue-900 dark:bg-blue-800 rounded-full shadow-md shrink-0">
-        <div className="absolute top-0.5 right-0.5 z-10">
+      <div className="relative h-14 w-14 flex items-center justify-center bg-muted rounded-2xl shadow-inner border border-border group-hover:border-primary/30 transition-colors shrink-0">
+        <div className="absolute -top-1 -right-1 z-10">
           <div
-            className={`size-3 rounded-full border-2 border-white dark:border-card ${getStatusStyles()}`}
+            className={`size-3.5 rounded-full border-2 border-card ${getStatusStyles()}`}
           />
         </div>
-        <UserCircle2Icon size={32} className="text-blue-100/80" />
+        <UserCircle2Icon size={34} className="text-muted-foreground/50" />
       </div>
 
       <div className="flex-1 min-w-0">
-        <h3 className="text-gray-800 dark:text-gray-200 truncate">
-          <span className="font-bold text-gray-500 dark:text-gray-400 text-[10px] uppercase tracking-tighter mr-1">
+        <h3 className="text-foreground truncate group-hover:text-primary transition-colors">
+          <span className="font-bold text-muted-foreground text-[9px] uppercase tracking-tighter mr-2 opacity-70">
             {userInfo.role === isStudent
               ? activeTab === "sup"
-                ? "To: "
+                ? "Recipient: "
                 : ""
-              : "from:"}
+              : "Sender:"}
           </span>
-          <span className="font-bold text-sm">{name}</span>
+          <span className="font-bold text-[13px]">{name}</span>
         </h3>
-        <p className="text-[10px] sm:text-xs flex items-center text-gray-400 dark:text-gray-500 mt-0.5 font-medium">
-          <Clock size={12} className="mr-1" />
+        <p className="text-[10px] flex items-center text-muted-foreground mt-1 font-semibold uppercase tracking-wide opacity-80">
+          <Clock size={11} className="mr-1.5 text-primary/60" />
           {formatDate(date.toString())}
         </p>
       </div>

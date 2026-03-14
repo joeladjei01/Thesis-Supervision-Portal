@@ -37,8 +37,9 @@ const ReviewSubmissions: React.FC = () => {
                     `/supervisor/student/${student.student.id}/submissions`,
                   )
                 }
-                className="bg-card border border-border rounded-lg p-4 hover:shadow-lg hover:border-primary transition-all cursor-pointer group"
+                className="bg-card border border-border rounded-xl p-5 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/50 transition-all duration-300 cursor-pointer group relative overflow-hidden"
               >
+                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full transform translate-x-8 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-500"></div>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <h2 className="text-lg font-semibold mb-1 text-foreground group-hover:text-primary">

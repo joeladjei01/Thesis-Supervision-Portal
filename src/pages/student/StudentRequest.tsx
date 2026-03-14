@@ -49,29 +49,31 @@ const StudentRequest = () => {
 
   return (
     <div>
-      <div className='rounded-lg grid grid-cols-1 md:grid-cols-3 overflow-hidden border border-gray-300'>
+      <div className='rounded-xl grid grid-cols-1 md:grid-cols-3 overflow-hidden border border-border bg-card shadow-sm'>
         <div className='col-span-1 md:col-span-1'>
           <RequestTab
             requests={allRequest}
           />
         </div>
-        <div className='hidden md:block col-span-2'>
-          <div className="flex flex-col items-center justify-center h-[80vh] bg-gradient-to-br from-blue-50 via-indigo-50 to-sky-50 border border-gray-200">
-            <div className="relative w-full text-center mx-aut p-8">
-              <div className="mb-8 relative">
-                <div className="w-32 h-32 mx-auto bg-blue-800 rounded-full flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                  <MessageSquareTextIcon size={60} className="text-white" />
+        <div className='hidden md:block col-span-2 relative'>
+          <div className="flex flex-col items-center justify-center h-[80vh] bg-gradient-to-br from-background via-muted/20 to-secondary/5 border-l border-border transition-colors duration-500">
+            <div className="relative w-full text-center p-8 z-10">
+              <div className="mb-8 relative flex justify-center">
+                <div className="w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center shadow-inner border border-primary/20 transform rotate-3 hover:rotate-0 transition-all duration-500 group">
+                  <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-lg transform -rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                    <MessageSquareTextIcon size={40} className="text-primary-foreground" />
+                  </div>
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-blue-800 mb-2 bg-gradient-to-r ">
+              <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight">
                 Select a Request
               </h2>
 
               <div className="text-center">
 
-                <p className="text-sm text-gray-500 mt-2">
-                  Select from your available requests on the left
+                <p className="text-sm text-muted-foreground mt-2 max-w-[200px] mx-auto font-medium leading-relaxed">
+                  Select from your available requests on the left to view details
                 </p>
               </div>
             </div>

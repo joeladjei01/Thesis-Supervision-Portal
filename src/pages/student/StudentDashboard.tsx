@@ -101,17 +101,17 @@ const NextDeadline: React.FC<NextDeadlineProps> = ({
   onUploadClick,
 }) => {
   return (
-    <div className="w-full h-fit bg-white rounded-xl shadow-sm border border-gray-200 p-4 ">
-      <h2 className="text-xl font-bold text-gray-900 mb-3">Next Deadline</h2>
+    <div className="w-full h-fit bg-card rounded-xl shadow-sm border border-border p-4">
+      <h2 className="text-xl font-bold text-foreground mb-3">Next Deadline</h2>
 
-      <div className="bg-blue-100 rounded-sm p-4 mb-4">
+      <div className="bg-muted rounded-lg p-4 mb-4 border border-border/50">
         <div className="flex items-center gap-3">
-          <Clock className="w-5 h-5 text-gray-600" />
+          <Clock className="w-5 h-5 text-muted-foreground" />
           <div>
-            <h3 className="font-semibold text-gray-900 text-lg">
+            <h3 className="font-semibold text-foreground text-lg">
               {deadline.title}
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Due: {formatDate(deadline.dueDate)}
             </p>
           </div>
@@ -279,7 +279,7 @@ const StudentDashboard: React.FC = () => {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-center items-center h-64">
-          <div className="text-gray-500">Loading dashboard...</div>
+          <div className="text-muted-foreground">Loading dashboard...</div>
         </div>
       </div>
     );
@@ -288,7 +288,7 @@ const StudentDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl">
       {/* Header */}
-      <div className="mb-8 border-b border-gray-200">
+      <div className="mb-8 border-b border-border">
         <Header
           Icon={GraduationCap}
           title={`${greeting()}, ${person.name}`}
